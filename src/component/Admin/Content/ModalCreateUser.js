@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import { FcAddImage } from "react-icons/fc";
 import { toast } from 'react-toastify';
 import { postCreateNewUser } from '../../../services/userService'
+// import CommonUtils from '../../../utils'
 const ModalCreateUser = (props) => {
     const {
         showModalCreateUser, setShowModalCreateUser,
@@ -14,7 +15,8 @@ const ModalCreateUser = (props) => {
         setShowModalCreateUser(false);
         setEmail('');
         setPassword('');
-        setUserName('');
+        setUserfName('');
+        setUserlName('');
         setImage('');
         setRole('');
         setPreviewImage('');
@@ -24,15 +26,40 @@ const ModalCreateUser = (props) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [userName, setUserName] = useState('');
+    const [userfName, setUserfName] = useState('');
+    const [userlName, setUserlName] = useState('');
     const [image, setImage] = useState('');
     const [role, setRole] = useState('USER');
     const [previewImage, setPreviewImage] = useState('');
+
+    const [address, setAddress] = useState('');
+    const [gender, setGender] = useState('');
+    const [position, setPosition] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('')
     // function
-    const handleUploadImage = (event) => {
+    const handleUploadImage = async (event) => {
         if (event?.target?.files && event?.target?.files[0]) {
+
+
+
             setPreviewImage(URL.createObjectURL(event.target.files[0]));
-            setImage(event.target.files[0])
+
+            let getBase64 = (file) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = error => reject(error);
+                });
+            }
+
+
+
+            let data = event.target.files;
+            let file = data[0];
+            let base64 = await getBase64(file);
+
+            setImage(base64)
 
         }
     };
@@ -58,19 +85,19 @@ const ModalCreateUser = (props) => {
 
         //submit dât
 
-        let data = await postCreateNewUser(email, password, userName, role, image)
+        let data = await postCreateNewUser(email, password, userfName, userlName, role, image, gender, position, address, phoneNumber)
 
 
 
 
-        if (data && data.EC === 0) {
-            toast.success(data.EM)
+        if (data.user && data.user.EC === 0) {
+            toast.success(data.user.EM)
             handleClose()
             setCurrentPage(1)
-            await getUserPaginate(1)
+            await getAllUser()
         }
-        if (data && data.EC !== 0) {
-            toast.error(data.EM)
+        if (data.user && data.user.EC !== 0) {
+            toast.error(data.user.EM)
         }
     };
     return (
@@ -106,11 +133,34 @@ const ModalCreateUser = (props) => {
                         </div>
 
                         <div className="col-md-6">
-                            <label className="form-label">User name</label>
+                            <label className="form-label">First Name</label>
                             <input
-                                onChange={(event) => setUserName(event.target.value)}
-                                type="text" className="form-control" value={userName} />
+                                onChange={(event) => setUserfName(event.target.value)}
+                                type="text" className="form-control" value={userfName} />
                         </div>
+                        <div className="col-md-6">
+                            <label className="form-label">lastName</label>
+                            <input
+                                onChange={(event) => setUserlName(event.target.value)}
+                                type="text" className="form-control" value={userlName} />
+                        </div>
+
+
+                        <div className="col-md-6">
+                            <label className="form-label">Address</label>
+                            <input
+                                onChange={(event) => setAddress(event.target.value)}
+                                type="text" className="form-control" value={address} />
+                        </div>
+
+                        <div className="col-md-6">
+                            <label className="form-label">Phone Number</label>
+                            <input
+                                onChange={(event) => setPhoneNumber(event.target.value)}
+                                type="text" className="form-control" value={phoneNumber} />
+                        </div>
+
+
                         <div className="col-md-4">
                             <label className="form-label">Role</label>
                             <select
@@ -119,8 +169,33 @@ const ModalCreateUser = (props) => {
                                 onChange={(event) => setRole(event.target.value)}>
                                 <option value='ADMIN' >ADMIN</option>
                                 <option>USER</option>
+                                <option>PATIENT</option>
+
                             </select>
                         </div>
+
+                        <div className="col-md-4">
+                            <label className="form-label">Position</label>
+                            <select
+                                value={position}
+                                className="form-select"
+                                onChange={(event) => setPosition(event.target.value)}>
+                                <option value='P2' >Doctor</option>
+                                <option>Patient</option>
+                            </select>
+                        </div>
+                        <div className="col-md-4">
+                            <label className="form-label">Gender</label>
+                            <select
+                                value={gender}
+                                className="form-select"
+                                onChange={(event) => setGender(event.target.value)}>
+                                <option value='MALE' >MALE</option>
+                                <option>FEMALE</option>
+                            </select>
+                        </div>
+
+
                         <div className='col-md-12'>
                             <label className="form-label label-upload" htmlFor='upload-image'>
                                 <FcAddImage size={'2em'} /> Upload File Image

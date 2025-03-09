@@ -25,8 +25,8 @@ const ManageUser = (props) => {
     const [pageCount, setPageCount] = useState(0);
     const LIMIT_USER = 1;
     useEffect(() => {
-        // getAllUser()
-        getUserPaginate(1)
+        getAllUser()
+        // getUserPaginate(1)
 
 
     }, [])
@@ -39,16 +39,16 @@ const ManageUser = (props) => {
             return
         }
     }
-    const getUserPaginate = async (page) => {
-        let res = await getUserPaginates(page, LIMIT_USER);
-        if (res.EC === 0) {
-            setListUser(res.DT.users)
-            setPageCount(res.DT.totalPages)
+    // const getUserPaginate = async (page) => {
+    //     let res = await getUserPaginates(page, LIMIT_USER);
+    //     if (res.EC === 0) {
+    //         setListUser(res.DT.users)
+    //         setPageCount(res.DT.totalPages)
 
-        } else {
-            return
-        }
-    }
+    //     } else {
+    //         return
+    //     }
+    // }
     const refeshDetailUser = () => {
         setDataViewUser({})
     };
@@ -58,6 +58,7 @@ const ManageUser = (props) => {
         setShowModalUpdateUser(true);
     };
     const handleClickBtnDeleteUser = async (data) => {
+
         setShowModalDeleteUser(true);
         setDataDelete(data);
 
@@ -84,13 +85,14 @@ const ManageUser = (props) => {
                         <AiTwotonePlusCircle size={'1em'} />  Add New User</button>
                 </div>
                 <div className="table-user-container">
-                    {/* <TableUser
+                    <TableUser
                         handleClickBtnDeleteUser={handleClickBtnDeleteUser}
                         handleClickBtnUpdateUser={handleClickBtnUpdateUser}
                         handleClickBtnViewUser={handleClickBtnViewUser}
-                        listUser={listUser} /> */}
+                        getAllUser={getAllUser}
+                        listUser={listUser} />
 
-                    <TableUserPaginate
+                    {/* <TableUserPaginate
                         getUserPaginate={getUserPaginate}
                         handleClickBtnDeleteUser={handleClickBtnDeleteUser}
                         handleClickBtnUpdateUser={handleClickBtnUpdateUser}
@@ -101,7 +103,7 @@ const ManageUser = (props) => {
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}
 
-                    />
+                    /> */}
 
                 </div>
                 <ModalCreateUser
@@ -109,7 +111,7 @@ const ManageUser = (props) => {
                     setShowModalCreateUser={setShowModalCreateUser}
                     getAllUser={getAllUser}
 
-                    getUserPaginate={getUserPaginate}
+                    // getUserPaginate={getUserPaginate}
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                 />
@@ -122,7 +124,7 @@ const ManageUser = (props) => {
 
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
-                    getUserPaginate={getUserPaginate}
+                // getUserPaginate={getUserPaginate}
 
                 />
                 <ModalDeleteUser
@@ -134,7 +136,7 @@ const ManageUser = (props) => {
 
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
-                    getUserPaginate={getUserPaginate}
+                // getUserPaginate={getUserPaginate}
                 />
                 <ModalViewUser
                     dataViewUser={dataViewUser}

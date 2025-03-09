@@ -1,15 +1,25 @@
 import axios from "../utils/axiosHost";
-const postCreateNewUser = (email, password, userName, role, image) => {
-    const data = new FormData();
-    data.append('email', email);
-    data.append('password', password);
-    data.append('username', userName);
-    data.append('role', role);
-    data.append('userImage', image);
-    return axios.post('api/v1/participant', data)
+const postCreateNewUser = (email, password,
+    firstName, lastName,
+    role, image,
+    gender, position,
+    address, phoneNumber) => {
+    let data = {
+        email,
+        password,
+        firstName,
+        lastName,
+        role,
+        image,
+        gender,
+        position,
+        address,
+        phoneNumber
+    }
+    return axios.post('api/v1/create-user', data)
 };
 const getAllUsers = () => {
-    return axios.get('api/v1/participant/all')
+    return axios.get('api/v1/user/all')
 }
 const putUpdateUser = (id, userName, role, image) => {
     const data = new FormData();
@@ -26,7 +36,7 @@ const deleteUser = (id) => {
 
 
 
-    return axios.delete('api/v1/participant', { data: { id: id } })
+    return axios.delete('api/v1/delete', { data: { id: id } })
 
 
 };

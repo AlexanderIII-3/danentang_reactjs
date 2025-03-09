@@ -2,7 +2,9 @@
 
 const TableUser = (props) => {
 
-    const { listUser, handleClickBtnUpdateUser, handleClickBtnDeleteUser, handleClickBtnViewUser } = props
+    const { listUser, handleClickBtnUpdateUser,
+        handleClickBtnDeleteUser, handleClickBtnViewUser,
+        getAllUser } = props
     return (
         <div className="table-user-container">
 
@@ -11,8 +13,10 @@ const TableUser = (props) => {
                     <tr>
                         <th scope="col">NO</th>
                         <th scope="col">Email</th>
-                        <th scope="col">User Name</th>
+                        <th scope="col">Full Name</th>
                         <th scope="col">Role</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">PhoneNumber</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -24,8 +28,10 @@ const TableUser = (props) => {
                                 <tr key={index}>
                                     <td >{index + 1}</td>
                                     <td>{item.email}</td>
-                                    <td>{item.username}</td>
-                                    <td>{item.role}</td>
+                                    <td>{item.firstName + " " + item.lastName}</td>
+                                    <td>{item.roleId}</td>
+                                    <td>{item.address}</td>
+                                    <td>{item.phoneNumber}</td>
                                     <td>
                                         <button
                                             onClick={() => { handleClickBtnUpdateUser(item) }}

@@ -8,8 +8,10 @@ const ModalDeleteUser = (props) => {
 
     const {
         show, setShow,
-        dataDelete, getUserPaginate,
-        setCurrentPage, currentPage } = props;
+        dataDelete, getUserPaginate, getAllUser,
+
+        setCurrentPage, currentPage
+    } = props;
 
 
 
@@ -19,8 +21,9 @@ const ModalDeleteUser = (props) => {
         if (res && res.EC === 0) {
             toast.success(res.EM)
             handleClose();
-            setCurrentPage(1);
-            await getUserPaginate(1)
+            // setCurrentPage(1);
+            await getAllUser()
+
         } if (res && res.EC !== 0) {
             toast.error(res.EM)
         }
