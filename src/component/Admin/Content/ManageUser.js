@@ -65,6 +65,7 @@ const ManageUser = (props) => {
 
     };
     const handleClickBtnViewUser = (user) => {
+        console.log('check detail user', user);
         setDataViewUser(user);
         setShowModalViewUser(true);
 

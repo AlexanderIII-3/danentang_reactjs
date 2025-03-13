@@ -3,23 +3,33 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postLogin } from '../../services/userService';
 import { toast } from 'react-toastify';
+import { FaLess, FaSpinner } from "react-icons/fa";
+import { useDispatch } from 'react-redux';
+import { handleLoginRedux } from '../../redux/action/userAction';
 const Login = () => {
-
+    const dispatch = useDispatch()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
+    const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
     const handleLogin = async () => {
         //validate
         handleSubmitCreateUser();
+        setIsLoading(true)
+
         //submit
         let res = await postLogin(email, password);
         if (res && res.EC === 0) {
+            dispatch(handleLoginRedux(res));
             toast.success(res.EM)
+            setIsLoading(false);
+
             navigate('/')
         }
         if (res && res.EC !== 0) {
             toast.error(res.EM)
+            setIsLoading(false);
+
         }
 
     };
@@ -79,7 +89,13 @@ const Login = () => {
                 <div>
                     <button
                         onClick={() => { handleLogin() }}
-                        className='btn-submit'>Login </button>
+                        className='btn-submit'
+                        disabled={isLoading}>
+
+                        {isLoading === true ? <FaSpinner className="loaderIcon" /> : ''}
+                        <span>Login</span>
+
+                    </button>
 
                 </div>
                 <div className=' go-back   text-center'>

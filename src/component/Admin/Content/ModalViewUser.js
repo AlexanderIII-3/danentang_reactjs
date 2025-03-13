@@ -22,6 +22,9 @@ const ModalViewUser = (props) => {
     const [role, setRole] = useState('');
     const [previewImage, setPreviewImage] = useState('')
     const [email, setEmail] = useState('')
+    const [address, setAddress] = useState('')
+    const [position, setPosition] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState('')
 
 
     const handleClose = () => {
@@ -33,13 +36,17 @@ const ModalViewUser = (props) => {
             let data = dataViewUser.image
 
             if (data) {
-                setPreviewImage(`data:image/jpeg;base64,${data}`);
+
+
+                setPreviewImage(data);
             }
 
             setEmail(dataViewUser.email);
-            setUserName(dataViewUser.username);
-
-            setRole(dataViewUser.role);
+            setUserName(dataViewUser.firstName + " " + dataViewUser.lastName);
+            setAddress(dataViewUser.address)
+            setPhoneNumber(dataViewUser.phoneNumber)
+            setPosition(dataViewUser.position)
+            setRole(dataViewUser.roleId);
 
 
         }
@@ -90,7 +97,7 @@ const ModalViewUser = (props) => {
                                         <MDBCardBody>
                                             <MDBRow>
                                                 <MDBCol sm="3">
-                                                    <MDBCardText>Full Name</MDBCardText>
+                                                    <MDBCardText>Full Name:</MDBCardText>
                                                 </MDBCol>
                                                 <MDBCol sm="9">
                                                     <MDBCardText className="text-muted">{username ? username : ''}</MDBCardText>
@@ -99,19 +106,57 @@ const ModalViewUser = (props) => {
                                             <hr />
                                             <MDBRow>
                                                 <MDBCol sm="3">
-                                                    <MDBCardText>Email</MDBCardText>
+                                                    <MDBCardText>Email:</MDBCardText>
                                                 </MDBCol>
                                                 <MDBCol sm="9">
                                                     <MDBCardText className="text-muted">{email ? email : ''}</MDBCardText>
                                                 </MDBCol>
                                             </MDBRow>
+
+
+
+
+
+
+
                                             <hr />
                                             <MDBRow>
                                                 <MDBCol sm="3">
-                                                    <MDBCardText>Role</MDBCardText>
+                                                    <MDBCardText>Address:</MDBCardText>
+                                                </MDBCol>
+                                                <MDBCol sm="9">
+                                                    <MDBCardText className="text-muted">{address ? address : ''}</MDBCardText>
+                                                </MDBCol>
+                                            </MDBRow>
+
+
+                                            <hr />
+                                            <MDBRow>
+                                                <MDBCol sm="3">
+                                                    <MDBCardText>Phone Number:</MDBCardText>
+                                                </MDBCol>
+                                                <MDBCol sm="9">
+                                                    <MDBCardText className="text-muted">{phoneNumber ? phoneNumber : ''}</MDBCardText>
+                                                </MDBCol>
+                                            </MDBRow>
+
+
+                                            <hr />
+                                            <MDBRow>
+                                                <MDBCol sm="3">
+                                                    <MDBCardText>Role:</MDBCardText>
                                                 </MDBCol>
                                                 <MDBCol sm="9">
                                                     <MDBCardText className="text-muted">{role ? role : ''}</MDBCardText>
+                                                </MDBCol>
+                                            </MDBRow>
+                                            <hr />
+                                            <MDBRow>
+                                                <MDBCol sm="3">
+                                                    <MDBCardText>Positon:</MDBCardText>
+                                                </MDBCol>
+                                                <MDBCol sm="9">
+                                                    <MDBCardText className="text-muted">{position ? position : ''}</MDBCardText>
                                                 </MDBCol>
                                             </MDBRow>
 

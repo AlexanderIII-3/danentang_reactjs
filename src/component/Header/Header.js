@@ -3,8 +3,12 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 
 const Header = () => {
+    const isLogin = useSelector(state => state.userInfo.isLogin)
+    const account = useSelector(state => state.userInfo.account)
     const navigate = useNavigate();
 
     const handleLogin = () => {
@@ -27,21 +31,29 @@ const Header = () => {
 
                     </Nav>
                     <Nav>
-                        <button
-                            onClick={() => { handleLogin() }}
-                            className='btn-login'>Login</button>
-                        <button
-                            onClick={() => { navigate('/register') }}
-                            className='btn-signup'>Sign up </button>
-                        {/* <NavDropdown title="Setting" id="basic-nav-dropdown">
 
-                            <NavDropdown.Item >Log in</NavDropdown.Item>
-                            <NavDropdown.Item>Log out</NavDropdown.Item>
+                        {isLogin && isLogin === false ?
+
+                            <>
+                                <button
+                                    onClick={() => { handleLogin() }}
+                                    className='btn-login'>Login</button>
+                                <button
+                                    onClick={() => { navigate('/register') }}
+                                    className='btn-signup'>Sign up </button>
+                            </>
+                            :
+                            <NavDropdown title="Setting" id="basic-nav-dropdown">
+
+                                <NavDropdown.Item> <NavLink to='/login' className='nav-link'>Log Out</NavLink></NavDropdown.Item>
 
 
-                            <NavDropdown.Item >Profile </NavDropdown.Item>
+                                <NavDropdown.Item >Profile </NavDropdown.Item>
 
-                        </NavDropdown> */}
+                            </NavDropdown>
+                        }
+
+
                     </Nav>
                 </Navbar.Collapse>
             </Container>
