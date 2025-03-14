@@ -66,10 +66,14 @@ const postRegister = (email, username, password) => {
     })
 
 }
+const FetchAllCodes = (type) => {
+    return axios.get(`/api/v1/fetch/allcode?type=${type}`)
+
+}
 
 export {
     postCreateNewUser, getAllUsers,
     putUpdateUser, deleteUser,
     getUserPaginates, postLogin,
-    postRegister
+    postRegister, FetchAllCodes
 }

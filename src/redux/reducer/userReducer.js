@@ -1,5 +1,5 @@
 
-import { HANDLE_LOGIN_COMPLETE } from '../action/userAction';
+import { HANDLE_LOGIN_COMPLETE, HANDLE_LOGOUT_COMPLETE } from '../action/userAction';
 const INITIAL_STATE = {
     account: {
         email: '',
@@ -12,7 +12,6 @@ const INITIAL_STATE = {
 const handleLoginReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case HANDLE_LOGIN_COMPLETE:
-            console.log('check action ', action)
             let data = action.payload.DT
             return {
                 ...state, account: {
@@ -23,6 +22,17 @@ const handleLoginReducer = (state = INITIAL_STATE, action) => {
                 },
                 isLogin: true,
             };
+        case HANDLE_LOGOUT_COMPLETE:
+            return {
+                ...state, account: {
+                    email: '',
+                    firstName: '',
+                    lastName: '',
+                    roleId: ''
+                },
+                isLogin: false,
+            };
+
 
 
         default: return state;

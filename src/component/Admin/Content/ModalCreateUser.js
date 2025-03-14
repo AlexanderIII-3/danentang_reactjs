@@ -4,12 +4,15 @@ import Modal from 'react-bootstrap/Modal';
 import { FcAddImage } from "react-icons/fc";
 import { toast } from 'react-toastify';
 import { postCreateNewUser } from '../../../services/userService'
-// import CommonUtils from '../../../utils'
+import { useEffect, usePrevious } from 'react';
 const ModalCreateUser = (props) => {
+
     const {
         showModalCreateUser, setShowModalCreateUser,
         getAllUser, currentPage,
-        setCurrentPage, getUserPaginate } = props
+        setCurrentPage, getUserPaginate,
+        listGender, listPosition,
+        listRole } = props
 
     const handleClose = () => {
         setShowModalCreateUser(false);
@@ -29,13 +32,14 @@ const ModalCreateUser = (props) => {
     const [userfName, setUserfName] = useState('');
     const [userlName, setUserlName] = useState('');
     const [image, setImage] = useState('');
-    const [role, setRole] = useState('USER');
     const [previewImage, setPreviewImage] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('')
 
     const [address, setAddress] = useState('');
-    const [gender, setGender] = useState('');
-    const [position, setPosition] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('')
+    const [gender, setGender] = useState(listGender[0]?.keyMap ? listGender[0]?.keyMap : '');
+    const [position, setPosition] = useState(listPosition[0]?.keyMap ? listPosition[0]?.keyMap : '');
+    const [role, setRole] = useState(listRole[0]?.keyMap ? listRole[0]?.keyMap : '');
+
     // function
     const handleUploadImage = async (event) => {
         if (event?.target?.files && event?.target?.files[0]) {
@@ -100,6 +104,23 @@ const ModalCreateUser = (props) => {
             toast.error(data.user.EM)
         }
     };
+    // const prevAmount = usePrevious(listGender, listPosition, listRole);
+
+    // useEffect(() => {
+
+    //     if (prevAmount.listGender !== listGender) {
+
+    //         // process here
+    //     }
+    //     if (prevAmount.listPosition !== listPosition) {
+
+    //         // process here
+    //     }
+    //     if (prevAmount.listRole !== listRole) {
+
+    //         // process here
+    //     }
+    // }, [listGender, listPosition, listRole])
     return (
         <>
             {/* <Button variant="primary" onClick={handleShow}>
@@ -167,9 +188,22 @@ const ModalCreateUser = (props) => {
                                 value={role}
                                 className="form-select"
                                 onChange={(event) => setRole(event.target.value)}>
-                                <option value='ADMIN' >ADMIN</option>
-                                <option>USER</option>
-                                <option>PATIENT</option>
+                                {listRole && listRole.length > 0 &&
+
+                                    listRole.map((item, index) => {
+
+                                        return (
+
+                                            <option
+                                                key={index}
+                                                value={item.keyMap}>{item.valueVI}</option>
+
+                                        )
+
+
+
+                                    })
+                                }
 
                             </select>
                         </div>
@@ -180,18 +214,46 @@ const ModalCreateUser = (props) => {
                                 value={position}
                                 className="form-select"
                                 onChange={(event) => setPosition(event.target.value)}>
-                                <option value='P2' >Doctor</option>
-                                <option>Patient</option>
+                                {listPosition && listPosition.length > 0 &&
+
+                                    listPosition.map((item, index) => {
+
+                                        return (
+
+                                            <option
+                                                key={index}
+                                                value={item.keyMap}>{item.valueVI}</option>
+
+                                        )
+
+
+
+                                    })
+                                }
                             </select>
                         </div>
                         <div className="col-md-4">
                             <label className="form-label">Gender</label>
                             <select
                                 value={gender}
+
                                 className="form-select"
                                 onChange={(event) => setGender(event.target.value)}>
-                                <option value='MALE' >MALE</option>
-                                <option>FEMALE</option>
+                                {listGender && listGender.length > 0 &&
+
+                                    listGender.map((item, index) => {
+
+                                        return (
+
+                                            <option value={item.keyMap}>{item.valueVI}</option>
+
+                                        )
+
+
+
+                                    })
+                                }
+
                             </select>
                         </div>
 

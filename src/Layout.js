@@ -19,10 +19,10 @@ const Layout = () => {
                 <Route path='/' element={<App />} >
                     <Route index element={<HomePage />} />
 
-                    <Route path="users" element={<User />} />
+
 
                 </Route>
-
+                <Route path="/users" element={<User />} />
 
                 <Route path="/admins" element={<Admin />} >
                     <Route index element={<DashBoard />} />

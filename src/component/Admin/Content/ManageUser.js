@@ -4,7 +4,7 @@ import './ManageUser.scss';
 import { AiTwotonePlusCircle } from "react-icons/ai";
 import TableUser from './TableUser';
 import { useState, useEffect } from "react";
-import { getAllUsers, getUserPaginates } from "../../../services/userService";
+import { getAllUsers, getUserPaginates, FetchAllCodes } from "../../../services/userService";
 import ModalUpdateUser from './ModalUpdateUser';
 import ModalDeleteUser from './ModalDeleteUser';
 import ModalViewUser from './ModalViewUser';
@@ -23,8 +23,15 @@ const ManageUser = (props) => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(0);
+
+    const [listGender, setListGender] = useState([]);
+    const [listRole, setListlistRole] = useState([]);
+    const [listPosition, setListPosition] = useState([]);
     const LIMIT_USER = 1;
     useEffect(() => {
+        fetchGender()
+        fetchPositon();
+        fetchRole()
         getAllUser()
         // getUserPaginate(1)
 
@@ -65,11 +72,25 @@ const ManageUser = (props) => {
 
     };
     const handleClickBtnViewUser = (user) => {
-        console.log('check detail user', user);
         setDataViewUser(user);
         setShowModalViewUser(true);
 
     };
+    const fetchGender = async () => {
+        let res = await FetchAllCodes('GENDER')
+        setListGender(res.DT);
+
+    }
+    const fetchRole = async () => {
+        let res = await FetchAllCodes('ROLE')
+        setListlistRole(res.DT);
+
+    }
+    const fetchPositon = async () => {
+        let res = await FetchAllCodes('POSITION')
+        setListPosition(res.DT);
+
+    }
 
     return (
         <div className="manage-user-container">
@@ -115,6 +136,9 @@ const ManageUser = (props) => {
                     // getUserPaginate={getUserPaginate}
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
+                    listGender={listGender}
+                    listPosition={listPosition}
+                    listRole={listRole}
                 />
                 <ModalUpdateUser
                     setShowModalUpdateUser={setShowModalUpdateUser}
