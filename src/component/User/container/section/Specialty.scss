@@ -1,0 +1,12 @@
+.specialty-child {
+    cursor: pointer;
+    border: 1px solid red;
+
+    .content-specialty {
+        padding: 10px 0;
+
+        &:hover {
+            color: #45c3d2;
+        }
+    }
+}

@@ -11,32 +11,35 @@ import ManageUser from './component/Admin/Content/ManageUser';
 import DashBoard from './component/Admin/Content/DashBoard';
 import Login from './component/Sign/Login';
 import Register from './component/Sign/Register';
+import CustomScrollbars from './component/CustomScrollbars';
 const Layout = () => {
 
     return (
         <>
-            <Routes>
-                <Route path='/' element={<App />} >
-                    <Route index element={<HomePage />} />
+            <CustomScrollbars style={{ height: '100vh', width: '100%' }}>
+                <Routes>
+                    <Route path='/' element={<App />} >
+                        <Route index element={<HomePage />} />
 
 
 
-                </Route>
-                <Route path="/users" element={<User />} />
+                    </Route>
+                    <Route path="/users" element={<User />} />
 
-                <Route path="/admins" element={<Admin />} >
-                    <Route index element={<DashBoard />} />
+                    <Route path="/admins" element={<Admin />} >
+                        <Route index element={<DashBoard />} />
 
-                    <Route path="manage-user" element={<ManageUser />} />
-                </Route>
-                <Route path="/login" element={<Login />} >
+                        <Route path="manage-user" element={<ManageUser />} />
+                    </Route>
+                    <Route path="/login" element={<Login />} >
 
-                </Route>
-                <Route path="/register" element={<Register />} >
+                    </Route>
+                    <Route path="/register" element={<Register />} >
 
-                </Route>
+                    </Route>
 
-            </Routes>
+                </Routes>
+            </CustomScrollbars>
 
 
             <ToastContainer

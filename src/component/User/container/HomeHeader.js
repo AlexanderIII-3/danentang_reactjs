@@ -114,7 +114,7 @@ const HomeHeader = (props) => {
                         </div>
                         <div className='option-child'>
                             <div className='icon-child'>
-                                <IoMdBed size={'medium'} />
+                                <IoMdBed />
 
                             </div>
                             <div className='text-child'>
