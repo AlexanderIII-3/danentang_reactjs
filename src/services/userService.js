@@ -70,10 +70,14 @@ const FetchAllCodes = (type) => {
     return axios.get(`/api/v1/fetch/allcode?type=${type}`)
 
 }
+const FetchAllDoctor = () => {
+    return axios.get('/api/v1/getAllDoctors')
+}
 
 export {
     postCreateNewUser, getAllUsers,
     putUpdateUser, deleteUser,
     getUserPaginates, postLogin,
-    postRegister, FetchAllCodes
+    postRegister, FetchAllCodes,
+    FetchAllDoctor
 }

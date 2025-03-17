@@ -1,5 +1,8 @@
 
-import { HANDLE_LOGIN_COMPLETE, HANDLE_LOGOUT_COMPLETE } from '../action/userAction';
+import {
+    HANDLE_LOGIN_COMPLETE, HANDLE_LOGOUT_COMPLETE,
+    HANDLE_FETCH_ALL_DOCTOR, HANDLE_FETCH_ALL_DOCTOR_FALL
+} from '../action/userAction';
 const INITIAL_STATE = {
     account: {
         email: '',
@@ -8,6 +11,7 @@ const INITIAL_STATE = {
         roleId: '',
     },
     isLogin: false,
+    doctorArr: []
 };
 const handleLoginReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -34,7 +38,11 @@ const handleLoginReducer = (state = INITIAL_STATE, action) => {
             };
 
 
-
+        case HANDLE_FETCH_ALL_DOCTOR: {
+            return {
+                ...state, doctorArr: action.payload.DT
+            }
+        }
         default: return state;
     }
 };

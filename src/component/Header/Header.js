@@ -9,17 +9,16 @@ import { handleLogOutRedux } from '../../redux/action/userAction';
 
 
 const Header = () => {
+    const navigate = useNavigate();
 
     const dispatch = useDispatch()
     const isLogin = useSelector(state => state.userInfo.isLogin)
     const account = useSelector(state => state.userInfo.account)
-    const navigate = useNavigate();
-
     const handleLogin = () => {
         navigate('/login');
     };
-    const handleLogout = async () => {
-        await dispatch(handleLogOutRedux());
+    const handleLogout = () => {
+        dispatch(handleLogOutRedux());
         navigate('/login');
     }
 
@@ -40,7 +39,7 @@ const Header = () => {
                     </Nav>
                     <Nav>
 
-                        {isLogin && isLogin === false ?
+                        {isLogin === false ?
 
                             <>
                                 <button
