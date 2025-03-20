@@ -13,17 +13,7 @@ const OutStandingDoctor = (props) => {
         }
 
     })
-    console.log('check user', arrDoctor)
-    // componentDidUpdate(prevProps, prevState, snapshot) {
-    //     if (prevProps.topDoctorRedux !== this.props.topDoctorRedux) {
-    //         this.setState({
-    //             arrDoctor: this.props.topDoctorRedux
-    //         })
-    //     }
-    // }
-    // componentDidMount() {
-    //     this.props.loadTopDoctors();
-    // }
+
     // handleViewDetailDoctor = (doctor) => {
     //     if (this.props.history) {
     //         this.props.history.push(`/detail-doctor/${doctor.id}`);
@@ -50,7 +40,7 @@ const OutStandingDoctor = (props) => {
                                     console.log(item)
                                 }
 
-                                const nameVi = ` ${item.lastName} ${item.firstName}`;
+                                const nameVi = ` ${item.positionData.valueVI}  ,${item.lastName} ${item.firstName}`;
                                 {/* let nameEn = `${item.positionData.valueEn}, ${item.firstName} ${item.lastName}`; */ }
                                 return (
                                     <div key={index} className='section-customize'

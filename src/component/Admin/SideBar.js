@@ -40,7 +40,7 @@ const SideBar = (props) => {
                         }}
                     >
                         <GiAncientRuins size={'3em'} color={"00bfff"} />
-                        <NavLink to="/" >
+                        <NavLink to="/" className='nav-link'>
                             <span className='link-home'>
                                 Alex Nguyễn
 
@@ -70,7 +70,7 @@ const SideBar = (props) => {
                             title="Features"
                         >
                             <MenuItem>  <Link to="manage-user">Manage User</Link></MenuItem>
-                            <MenuItem> Manage Quiz</MenuItem>
+                            <MenuItem> <Link to="manage-doctor">Manage Doctor</Link> </MenuItem>
                             <MenuItem> Manage Question</MenuItem>
                         </SubMenu>
 

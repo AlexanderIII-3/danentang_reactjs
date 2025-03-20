@@ -1,11 +1,12 @@
 
 import {
 
-    HANDLE_FETCH_ALL_DOCTOR, HANDLE_FETCH_ALL_DOCTOR_FALL
+    HANDLE_FETCH_ALL_DOCTOR, HANDLE_FETCH_ALL_DOCTOR_FALL, HANDLE_FETCH_REQUIRED_DOCTOR
 } from '../action/userAction';
 const INITIAL_STATE = {
 
-    doctorArr: []
+    doctorArr: [],
+    allRequiredDoctorInfor: []
 };
 const handleFetchDoctor = (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -15,6 +16,12 @@ const handleFetchDoctor = (state = INITIAL_STATE, action) => {
         case HANDLE_FETCH_ALL_DOCTOR: {
             return {
                 ...state, doctorArr: action.payload.DT
+            }
+        }
+        case HANDLE_FETCH_REQUIRED_DOCTOR: {
+            console.log('check data gender province', action.payload)
+            return {
+                ...state, allRequiredDoctorInfor: action.payload
             }
         }
         default: return state;

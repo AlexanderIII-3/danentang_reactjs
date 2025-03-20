@@ -12,6 +12,7 @@ import DashBoard from './component/Admin/Content/DashBoard';
 import Login from './component/Sign/Login';
 import Register from './component/Sign/Register';
 import CustomScrollbars from './component/CustomScrollbars';
+import ManageDoctor from './component/Admin/Content/ManageDoctor';
 const Layout = () => {
 
     return (
@@ -30,6 +31,7 @@ const Layout = () => {
                         <Route index element={<DashBoard />} />
 
                         <Route path="manage-user" element={<ManageUser />} />
+                        <Route path='manage-doctor' element={<ManageDoctor />}></Route>
                     </Route>
                     <Route path="/login" element={<Login />} >
 

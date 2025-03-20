@@ -28,11 +28,21 @@ const User = () => {
     useEffect(() => {
         fetchDoctor()
     }, [])
-    console.log('check doctor ', doctorArr)
 
     const fetchDoctor = async () => {
-        let doctor = await FetchAllDoctor()
-        setDoctorArr(doctor.DT)
+        try {
+            let doctor = await FetchAllDoctor()
+            if (doctor) {
+                setDoctorArr(doctor.DT)
+
+            } else {
+                setDoctorArr([])
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     useEffect(() => {
