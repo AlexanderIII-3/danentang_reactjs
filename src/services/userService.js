@@ -73,11 +73,19 @@ const FetchAllCodes = (type) => {
 const FetchAllDoctor = () => {
     return axios.get('/api/v1/getAllDoctors')
 }
+const createNewClinic = (data) => {
 
+    return axios.post('/api/v1/create-new-clinic', data)
+}
+const handleFetchAllClinic = () => {
+
+    return axios.get('/api/v1/get-all-clinic')
+}
 export {
     postCreateNewUser, getAllUsers,
     putUpdateUser, deleteUser,
     getUserPaginates, postLogin,
     postRegister, FetchAllCodes,
-    FetchAllDoctor
+    FetchAllDoctor, createNewClinic,
+    handleFetchAllClinic
 }

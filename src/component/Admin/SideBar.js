@@ -71,7 +71,7 @@ const SideBar = (props) => {
                         >
                             <MenuItem>  <Link to="manage-user">Manage User</Link></MenuItem>
                             <MenuItem> <Link to="manage-doctor">Manage Doctor</Link> </MenuItem>
-                            <MenuItem> Manage Question</MenuItem>
+                            <MenuItem> <Link to="manage-clinic" >Manage CLinic</Link></MenuItem>
                         </SubMenu>
 
                     </Menu>

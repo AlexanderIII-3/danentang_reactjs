@@ -1,6 +1,5 @@
-class CommonUtils {
-
-    static getBase64(file) {
+export const CommonUtils = {
+    getBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -8,6 +7,4 @@ class CommonUtils {
             reader.onerror = error => reject(error);
         });
     }
-}
-
-export default CommonUtils;
+};
