@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CommonUtils } from '../../../utils/CommonUtils';
 import { FcAddImage } from "react-icons/fc";
 import { createNewClinic } from '../../../services/userService'
 import './ManageSpecity.scss';
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
-
-import ListSpecialty from './ListSpecialty';
+import { handleFetchAllClinic, handleDeleteClinicService } from '../../../services/userService'
+import ListClinic from './ListClinic';
 import { toast } from 'react-toastify';
+import ModalUpdateClinic from './ModalUpdateClinic';
 
 const mdParser = new MarkdownIt();
 
 const ManageClinic = () => {
+    const [listClinic, setListClinic] = useState({})
+    const [showModalUpdateClinic, setShowModalUpdateClinic] = useState(false)
+    const [dataUpdateClinic, setDataUpdateClinic] = useState({})
     const [state, setState] = useState({
         previewImgUrl: '',
         image: '',
@@ -23,22 +27,23 @@ const ManageClinic = () => {
         id: '',
         action: 'CREATE',
     });
+    useEffect(() => {
+        handeFeacthAllClinic()
+    }, [])
 
-    // async componentDidMount() {
-    //     // props.getRequiredSpecialtyInfor();
-    // }
-    // componentDidUpdate(prevProps, prevState, snapshot) {
-    //     if (prevProps.specialtyArr !== props.specialtyArr) {
-    //         setState({
-    //             previewImgUrl: '',
-    //             image: '',
-    //             isOpen: false,
-    //             action: '',
-    //             nameDes: '',
-    //             description: '',
-    //         })
-    //     }
-    // }
+    const handeFeacthAllClinic = async () => {
+        const res = await handleFetchAllClinic()
+        if (res && res.EC === 0) {
+
+            setListClinic(res.DT)
+
+        }
+
+    }
+    const handleUpdateClinic = (data) => {
+        setDataUpdateClinic(data)
+        setShowModalUpdateClinic(!showModalUpdateClinic)
+    }
     const handleCreateNewClinic = async () => {
 
         if (state.action === "CREATE") {
@@ -53,6 +58,8 @@ const ManageClinic = () => {
             })
             if (data && data.EC === 0) {
                 toast.success('Create New Clinic Success!')
+                handeFeacthAllClinic()
+
                 setState({
                     name: '',
                     address: '',
@@ -68,32 +75,20 @@ const ManageClinic = () => {
 
             }
         }
-        // if (state.action === CRUD_ACTIONS.EDIT) {
-        //     let data = await createNewClinic({
-        //         name: state.name,
-        //         address: state.address,
-        //         descriptionHtml: state.descriptionHtml,
-        //         descriptionMarkDown: state.descriptionMarkDown,
-        //         image: state.image,
-        //         action: CRUD_ACTIONS.EDIT
-        //     })
-        //     if (data && data.errorCode === 0) {
-        //         toast.success('Edit Clinic Success!')
-        //         setState({
-        //             name: '',
-        //             address: '',
-        //             descriptionHtml: '',
-        //             descriptionMarkDown: '',
-        //             image: '',
-        //             previewImgUrl: '',
-        //             action: CRUD_ACTIONS.CREATE
 
-        //         })
-        //     } else {
-        //         toast.error('Edit  Clinic faled!')
 
-        //     }
-        // }
+    }
+    const handleDeleteClinic = async (data) => {
+        console.log('check data', data)
+
+        let res = await handleDeleteClinicService(data.id)
+        if (res && res.EC === 0) {
+            toast.success(res.EM)
+            handeFeacthAllClinic()
+        } else {
+            toast.error(res.EM)
+        }
+
 
     }
     const handleOnchangeImage = async (event) => {
@@ -149,7 +144,7 @@ const ManageClinic = () => {
 
     return (
         <div className='manage-specialty-container'>
-            <div className='specialty-title'>Manage Specialty</div>
+            <div className='specialty-title'>Manage Clinic</div>
             <div className='add-new-specialty row'>
                 <div className='col-6 form-group'>
                     <label>Name Clinic</label>
@@ -223,7 +218,20 @@ const ManageClinic = () => {
                     //     onCloseRequest={() => setState({ isOpen: false })}
                     // />
                 } */}
-            <ListSpecialty />
+            <ListClinic
+                handleDeleteClinic={handleDeleteClinic}
+                listClinic={listClinic}
+                handleUpdateClinic={handleUpdateClinic}
+
+
+            />
+            <ModalUpdateClinic
+                showModalUpdateClinic={showModalUpdateClinic}
+                setShowModalUpdateClinic={setShowModalUpdateClinic}
+                dataUpdateClinic={dataUpdateClinic}
+                setDataUpdateClinic={setDataUpdateClinic}
+                handeFeacthAllClinic={handeFeacthAllClinic}
+            />
         </div>
     );
 };

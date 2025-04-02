@@ -81,11 +81,21 @@ const handleFetchAllClinic = () => {
 
     return axios.get('/api/v1/get-all-clinic')
 }
+const handleDeleteClinicService = (id) => {
+    return axios.post('/api/v1/delete-clinic', { id: id })
+}
+const handleUpdateClinicService = (data) => {
+    return axios.post('/api/v1/update-clinic', data)
+}
+const handleCreateSpecialtyService = (data) => {
+    return axios.post('/api/v1/specialty-save-infor', data)
+}
 export {
     postCreateNewUser, getAllUsers,
     putUpdateUser, deleteUser,
     getUserPaginates, postLogin,
     postRegister, FetchAllCodes,
     FetchAllDoctor, createNewClinic,
-    handleFetchAllClinic
+    handleFetchAllClinic, handleDeleteClinicService,
+    handleUpdateClinicService, handleCreateSpecialtyService
 }

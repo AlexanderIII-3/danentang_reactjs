@@ -14,6 +14,7 @@ import Register from './component/Sign/Register';
 import CustomScrollbars from './component/CustomScrollbars';
 import ManageDoctor from './component/Admin/Content/ManageDoctor';
 import ManageClinic from './component/Admin/clinic/ManageClinic';
+import ManageSpecilaty from './component/Admin/specialty/ManageSpecilaty';
 const Layout = () => {
 
     return (
@@ -34,6 +35,8 @@ const Layout = () => {
                         <Route path="manage-user" element={<ManageUser />} />
                         <Route path='manage-doctor' element={<ManageDoctor />}></Route>
                         <Route path='manage-clinic' element={<ManageClinic />}> </Route>
+                        <Route path='manage-specilaty' element={<ManageSpecilaty />}> </Route>
+
                     </Route>
                     <Route path="/login" element={<Login />} >
 
