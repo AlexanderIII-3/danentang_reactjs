@@ -90,6 +90,23 @@ const handleUpdateClinicService = (data) => {
 const handleCreateSpecialtyService = (data) => {
     return axios.post('/api/v1/specialty-save-infor', data)
 }
+const handleFetchALlSpecialtyService = () => {
+
+    return axios.get('/api/v1/fetch-specialty-infor');
+}
+const handleDeleteSpecialty = (id) => {
+    return axios.post('/api/v1/handle-delete-specialty', { id: id })
+
+}
+const handleUpdateSpecialtyService = (data) => {
+    return axios.post('/api/v1/handle-update-specialty', data)
+
+}
+
+//doctor
+const getDetailInforDoctor = (data) => {
+
+}
 export {
     postCreateNewUser, getAllUsers,
     putUpdateUser, deleteUser,
@@ -97,5 +114,7 @@ export {
     postRegister, FetchAllCodes,
     FetchAllDoctor, createNewClinic,
     handleFetchAllClinic, handleDeleteClinicService,
-    handleUpdateClinicService, handleCreateSpecialtyService
+    handleUpdateClinicService, handleCreateSpecialtyService,
+    handleFetchALlSpecialtyService, handleDeleteSpecialty,
+    handleUpdateSpecialtyService, getDetailInforDoctor
 }

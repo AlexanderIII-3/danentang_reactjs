@@ -3,36 +3,35 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FcAddImage } from "react-icons/fc";
 import { toast } from 'react-toastify';
-import { handleUpdateClinicService } from '../../../services/userService'
+import { handleUpdateSpecialtyService } from '../../../services/userService'
 import _ from 'lodash';
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import { CommonUtils } from '../../../utils/CommonUtils';
 
-const ModalUpdateClinic = (props) => {
+const ModalUpdateSpecialty = (props) => {
 
     const mdParser = new MarkdownIt();
 
-    const { showModalUpdateClinic, setShowModalUpdateClinic,
-        dataUpdateClinic, setDataUpdateClinic, handeFeacthAllClinic
+    const { showModalUpdateSpecialty, handleFecthAllSpecialty, setDataSpecialty, dataUpdateSpecialty, setShowModalUpdateSpecialty,
+
     } = props
 
     const handleClose = () => {
-        setShowModalUpdateClinic(false);
-        setAddress('');
+        setShowModalUpdateSpecialty(false);
+
         setName('');
         setImage('');
         setDescriptionHtml('')
         setDescriptionMarkDown('')
         setPreviewImage('');
-        setDataUpdateClinic('')
+        setDataSpecialty('')
     }
 
     //state
     const [descriptionMarkDown, setDescriptionMarkDown] = useState('')
     const [descriptionHtml, setDescriptionHtml] = useState('')
     const [id, setId] = useState('')
-    const [address, setAddress] = useState('');
     const [name, setName] = useState('');
     const [image, setImage] = useState([]);
 
@@ -40,8 +39,8 @@ const ModalUpdateClinic = (props) => {
     // function
 
     useEffect(() => {
-        if (!_.isEmpty(dataUpdateClinic)) {
-            let data = dataUpdateClinic.image
+        if (!_.isEmpty(dataUpdateSpecialty)) {
+            let data = dataUpdateSpecialty.image
             // check image
 
             if (data) {
@@ -49,14 +48,13 @@ const ModalUpdateClinic = (props) => {
             }
 
             // update state
-            setId(dataUpdateClinic.id);
-            setAddress(dataUpdateClinic.address);
-            setName(dataUpdateClinic.name);
-            setDescriptionHtml(dataUpdateClinic.descriptionHtml)
-            setDescriptionMarkDown(dataUpdateClinic.descriptionMarkDown)
-            setImage(dataUpdateClinic.image);
+            setId(dataUpdateSpecialty.id);
+            setName(dataUpdateSpecialty.name);
+            setDescriptionHtml(dataUpdateSpecialty.descriptionHtml)
+            setDescriptionMarkDown(dataUpdateSpecialty.descriptionMarkDown)
+            setImage(dataUpdateSpecialty.image);
         }
-    }, [dataUpdateClinic]);
+    }, [dataUpdateSpecialty]);
     const handleUploadImage = async (event) => {
         if (event?.target?.files && event?.target?.files[0]) {
             setPreviewImage(URL.createObjectURL(event.target.files[0]));
@@ -70,11 +68,11 @@ const ModalUpdateClinic = (props) => {
     };
 
 
-    const handleSubmitUpdateClinic = async () => {
+    const handleSubmitUpdateSpecialty = async () => {
 
         const data = {
             name,
-            address,
+
             id,
             image,
             descriptionHtml,
@@ -83,13 +81,13 @@ const ModalUpdateClinic = (props) => {
         }
         //submit dât
 
-        let res = await handleUpdateClinicService(data)
+        let res = await handleUpdateSpecialtyService(data)
 
 
         if (res.EC === 0) {
 
             toast.success(res.EM)
-            handeFeacthAllClinic()
+            handleFecthAllSpecialty()
 
             handleClose()
 
@@ -113,14 +111,14 @@ const ModalUpdateClinic = (props) => {
         <>
 
 
-            <Modal show={showModalUpdateClinic}
+            <Modal show={showModalUpdateSpecialty}
                 onHide={handleClose}
                 size='xl'
                 backdrop='static'
                 className='modal-add-user'
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Update User</Modal.Title>
+                    <Modal.Title>Update Specialty</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 
@@ -132,12 +130,7 @@ const ModalUpdateClinic = (props) => {
 
                                 value={name} />
                         </div>
-                        <div className="col-md-6">
-                            <label className="form-label">Addres</label>
-                            <input
-                                onChange={(event) => setAddress(event.target.value, ...address)}
-                                type="text" className="form-control" value={address} />
-                        </div>
+
 
 
                         <div className='col-md-12'>
@@ -176,7 +169,7 @@ const ModalUpdateClinic = (props) => {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={handleSubmitUpdateClinic}>
+                    <Button variant="primary" onClick={handleSubmitUpdateSpecialty}>
                         Update
                     </Button>
                 </Modal.Footer>
@@ -185,4 +178,4 @@ const ModalUpdateClinic = (props) => {
     );
 }
 
-export default ModalUpdateClinic;
+export default ModalUpdateSpecialty;

@@ -6,14 +6,21 @@ import MarkdownIt from 'markdown-it';
 import { CommonUtils } from '../../../utils/CommonUtils';
 import MdEditor from 'react-markdown-editor-lite';
 import { FcAddImage } from "react-icons/fc";
-import { handleCreateSpecialtyService } from '../../../services/userService'
+import {
+    handleCreateSpecialtyService, handleFetchALlSpecialtyService,
+    handleDeleteSpecialty
+} from '../../../services/userService'
 import { toast } from 'react-toastify';
-
+import ListSpecialty from './ListSpecialty';
+import ModalUpdateSpecialty from './ModalUpdateSpecialty';
 // import ListSpecialty from './ListSpecialty';
 
 const mdParser = new MarkdownIt();
 
-const ManageSpecity = ({ specialtyArr }) => {
+const ManageSpecity = () => {
+    const [dataUpdateSpecialty, setDataSpecialty] = useState('');
+    const [listSpecialty, setListSpecialty] = useState('');
+    const [showModalUpdateSpecialty, setShowModalUpdateSpecialty] = useState(false);
     const [previewImgUrl, setPreviewImgUrl] = useState('');
     const [image, setImage] = useState('');
     const [name, setName] = useState('');
@@ -21,13 +28,27 @@ const ManageSpecity = ({ specialtyArr }) => {
     const [descriptionMarkDown, setDescriptionMarkDown] = useState('');
     const [id, setId] = useState('');
 
-
     useEffect(() => {
-        setPreviewImgUrl('');
-        setImage('');
-        setName('');
-        setDescriptionMarkDown('');
-    }, [specialtyArr]);
+        handleFecthAllSpecialty()
+
+
+    }, [])
+    const handleFecthAllSpecialty = async () => {
+        try {
+            const res = await handleFetchALlSpecialtyService()
+
+            if (res && res.EC === 0) {
+                setListSpecialty(res.DT)
+
+
+            } else {
+                setListSpecialty([])
+            }
+        } catch (error) {
+
+        }
+
+    }
 
     const handleOnchangeImage = async (event) => {
         let file = event.target.files[0];
@@ -47,9 +68,26 @@ const ManageSpecity = ({ specialtyArr }) => {
     const handleOnchange = (event, setter) => {
         setter(event.target.value);
     };
+    const handleDelete = async (item) => {
+        const res = await handleDeleteSpecialty(item.id)
+        if (res && res.EC === 0) {
+            toast.success(res.EM)
+            handleFecthAllSpecialty()
 
+        } else {
+            toast.error(res.EM)
+        }
+    }
 
+    const handleUpdateSpecialty = (item) => {
+        if (item) {
+            setDataSpecialty(item)
+            setShowModalUpdateSpecialty(!showModalUpdateSpecialty)
 
+        } else {
+            setDataSpecialty({})
+        }
+    }
     const handleEditorChange = ({ html, text }) => {
         setDescriptionMarkDown(text);
         setDescriptionHtml(html);
@@ -150,8 +188,22 @@ const ManageSpecity = ({ specialtyArr }) => {
                 </div>
             </div>
 
+            <ModalUpdateSpecialty
 
-            {/* <ListSpecialty handleEditUserFromProps={handleEditUserFromProps} /> */}
+                dataUpdateSpecialty={dataUpdateSpecialty}
+                showModalUpdateSpecialty={showModalUpdateSpecialty}
+                setShowModalUpdateSpecialty={setShowModalUpdateSpecialty}
+                setDataSpecialty={setDataSpecialty}
+                handleFecthAllSpecialty={handleFecthAllSpecialty}
+            />
+            <ListSpecialty
+                handleDelete={handleDelete}
+                listSpecialty={listSpecialty}
+                handleUpdateSpecialty={handleUpdateSpecialty}
+                showModalUpdateSpecialty={showModalUpdateSpecialty}
+                setShowModalUpdateSpecialty={setShowModalUpdateSpecialty}
+
+            />
         </div>
     );
 };
