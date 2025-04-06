@@ -1,5 +1,5 @@
 import { type } from '@testing-library/user-event/dist/type';
-import { FetchAllDoctor, FetchAllCodes } from '../../services/userService'
+import { FetchAllDoctor, FetchAllCodes, handleFetchAllClinic, handleFetchALlSpecialtyService } from '../../services/userService'
 
 export const HANDLE_LOGIN_COMPLETE = 'HANDLE_LOGIN_COMPLETE';
 export const HANDLE_LOGOUT_COMPLETE = 'HANDLE_LOGOUT_COMPLETE'
@@ -20,20 +20,27 @@ export const handleLogOutRedux = () => {
 
 
 
-export const handleFetchAllDoctor = () => {
+export const handleFetchRequiredDoctor = () => {
     return async (dispatch, getState) => {
         try {
             const resPrice = await FetchAllCodes('PRICE')
             const resPayment = await FetchAllCodes('PAYMENT')
             const resProvince = await FetchAllCodes('PROVINCE')
+            const resClinic = await handleFetchAllClinic()
+            const resSpecialty = await handleFetchALlSpecialtyService()
+
             if (resPrice && resPrice.EC === 0
                 && resPayment && resPayment.EC === 0
                 && resProvince && resProvince.EC === 0
+                && resClinic && resClinic.EC === 0
+                && resSpecialty && resSpecialty.EC === 0
             ) {
                 let data = {
                     resPrice: resPrice.DT,
                     resPayment: resPayment.DT,
-                    resProvince: resProvince.DT
+                    resProvince: resProvince.DT,
+                    resClinic: resClinic.DT,
+                    resSpecialty: resSpecialty.DT
                 }
                 dispatch({
                     type: HANDLE_FETCH_REQUIRED_DOCTOR,

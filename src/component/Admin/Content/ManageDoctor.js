@@ -3,12 +3,14 @@ import React, { Component } from 'react';
 import './ManageDoctor.scss';
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
+import { connect } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import 'react-markdown-editor-lite/lib/index.css';
 import Select from 'react-select';
 import { CRUD_ACTIONS, LANGUAGES } from '../../../utils/const';
-import { getDetailInforDoctor } from '../../../services/userService';
-
+import { getDetailInforDoctor, fetchAllDoctor, saveInforDoctor } from '../../../services/userService';
+import { handleFetchRequiredDoctor } from '../../../redux/action/userAction'
 // const options = [
 //     { value: 'chocolate', label: 'Chocolate' },
 //     { value: 'strawberry', label: 'Strawberry' },
@@ -20,6 +22,7 @@ const mdParser = new MarkdownIt(/* Markdown-it options */);
 
 
 class ManageDoctor extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -28,6 +31,7 @@ class ManageDoctor extends Component {
             contentHtml: '',
             selectedDoctor: '',
             description: '',
+            allDoctor: [],
             listDoctor: [],
             checkData: false,
 
@@ -53,19 +57,29 @@ class ManageDoctor extends Component {
 
     }
 
+    handleGetTopDoctor = async () => {
 
-    // componentDidMount() {
-    //     this.props.fetchAllDoctor();
-    //     this.props.getRequiredDoctorInfor()
-    // }
+        let listDoctor = await fetchAllDoctor()
+        if (listDoctor) {
+            this.setState({
+                allDoctor: listDoctor.DT
+
+            })
+        }
+    }
+    async componentDidMount() {
+        this.handleGetTopDoctor()
+
+        this.props.handleFetchRequiredDoctor()
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
-        let dataSelect = this.buildDataInputSelect(this.props.allDoctor, "USER")
-        if (prevProps.allDoctor !== this.props.allDoctor) {
+        let dataSelect = this.buildDataInputSelect(this.state.allDoctor, "USER")
+        if (prevState.allDoctor !== this.state.allDoctor) {
             this.setState({
                 listDoctor: dataSelect
             })
         }
-
         if (prevProps.allRequiredDoctorInfor !== this.props.allRequiredDoctorInfor) {
             let { resPrice, resPayment, resProvince, resSpecialty, resClinic } = this.props.allRequiredDoctorInfor
             let dataSelectPrice = this.buildDataInputSelect(resPrice, "PRICE")
@@ -82,22 +96,22 @@ class ManageDoctor extends Component {
                 listClinic: dataSelectClinic
             });
         }
-        if (prevProps.language !== this.props.language) {
-            let dataSelect = this.buildDataInputSelect(this.props.allDoctor, "USER")
-            let { resPrice, resPayment, resProvince } = this.props.allRequiredDoctorInfor
+        // if (prevProps.language !== this.props.language) {
+        //     let dataSelect = this.buildDataInputSelect(this.props.allDoctor, "USER")
+        //     let { resPrice, resPayment, resProvince } = this.props.allRequiredDoctorInfor
 
-            let dataSelectPrice = this.buildDataInputSelect(resPrice, "PRICE")
-            let dataSelectPayment = this.buildDataInputSelect(resPayment, "PAYMENT")
-            let dataSelectProvinces = this.buildDataInputSelect(resProvince, "PROVINCE")
-            if (prevProps.allDoctor !== this.props.allDoctor) {
-                this.setState({
-                    listDoctor: dataSelect,
-                    listPrice: dataSelectPrice,
-                    listPayment: dataSelectPayment,
-                    listProvinces: dataSelectProvinces,
-                })
-            }
-        }
+        //     let dataSelectPrice = this.buildDataInputSelect(resPrice, "PRICE")
+        //     let dataSelectPayment = this.buildDataInputSelect(resPayment, "PAYMENT")
+        //     let dataSelectProvinces = this.buildDataInputSelect(resProvince, "PROVINCE")
+        //     if (prevProps.allDoctor !== this.props.allDoctor) {
+        //         this.setState({
+        //             listDoctor: dataSelect,
+        //             listPrice: dataSelectPrice,
+        //             listPayment: dataSelectPayment,
+        //             listProvinces: dataSelectProvinces,
+        //         })
+        //     }
+        // }
     }
 
     handleEditorChange = ({ html, text }) => {
@@ -107,9 +121,9 @@ class ManageDoctor extends Component {
             contentHtml: html
         })
     }
-    handleSaveContent = () => {
+    handleSaveContent = async () => {
         let { checkData } = this.state;
-        this.props.saveInforDoctor({
+        let res = await saveInforDoctor({
             // save detail doctor
             contentHtml: this.state.contentHtml,
             contentMarkDown: this.state.contentMarkDown,
@@ -128,22 +142,48 @@ class ManageDoctor extends Component {
             clinicId: this.state.selectedClinic.value,
             specialtyId: this.state.selectedSpecialty.value
         })
+        if (res && res.EC === 0) {
+            toast.success(res.EM)
+
+            this.setState({
+                contentMarkDown: '',
+                contentHtml: '',
+                selectedDoctor: '',
+                description: '',
+                selectedPrice: '',
+                selectedPayment: '',
+                selectedProvince: '',
+                nameClinic: '',
+                addressClinic: '',
+                selectedClinic: '',
+                selectedSpecialty: '',
+                note: '',
+                clinicId: '',
+                specialtyId: '',
+
+
+            })
+        } else {
+            toast.error(res.EM)
+        }
 
 
     }
     handleChange = async selectedDoctor => {
         this.setState({ selectedDoctor });
         let res = await getDetailInforDoctor(selectedDoctor.value)
-        if (res && res.errorCode === 0 && res.data && res.data.MarkDown) {
-            let markDown = res.data.MarkDown;
+        if (res && res.EC === 0 && res.DT && res.DT.MarkDown) {
+            let markDown = res.DT.MarkDown;
             let addressClinic = '', nameClinic = '', note = '',
                 priceId = '', paymentId = '', provinceId = '', specialtyId = '',
-                selectedPrice = '', selectedPayment = '', selectedProvince = '', selectedSpecialty = '', clinicId = '', selectedClinic = ''
+                selectedPrice = '', selectedPayment = '', selectedProvince = '',
+                selectedSpecialty = '', clinicId = '', selectedClinic = ''
 
 
 
-            if (res.data.Doctor_Infor) {
-                let doctorInfor = res.data.Doctor_Infor
+
+            if (res.DT.Doctor_Infor) {
+                let doctorInfor = res.DT.Doctor_Infor
                 addressClinic = doctorInfor.addressClinic;
                 nameClinic = doctorInfor.nameClinic;
                 note = doctorInfor.note;
@@ -234,8 +274,8 @@ class ManageDoctor extends Component {
                 inputData.map((item, index) => {
                     let object = {};
                     let labelVi = `${item.lastName} ${item.firstName}`;
-                    let labelEn = `${item.firstName} ${item.lastName}`;
-                    object.label = language === LANGUAGES.VI ? labelVi : labelEn;
+
+                    object.label = labelVi
                     object.value = item.id;
                     result.push(object)
                 })
@@ -244,8 +284,8 @@ class ManageDoctor extends Component {
                 inputData.map((item, index) => {
                     let object = {};
                     let labelVi = `${item.valueVI} vnđ`;
-                    let labelEn = `${item.valueEn} USD`;
-                    object.label = language === LANGUAGES.VI ? labelVi : labelEn;
+
+                    object.label = labelVi
                     object.value = item.keyMap;
                     result.push(object)
                 })
@@ -254,8 +294,7 @@ class ManageDoctor extends Component {
                 inputData.map((item, index) => {
                     let object = {};
                     let labelVi = item.valueVI;
-                    let labelEn = item.valueEn;
-                    object.label = language === LANGUAGES.VI ? labelVi : labelEn;
+                    object.label = labelVi
                     object.value = item.keyMap;
                     result.push(object)
                 })
@@ -264,8 +303,7 @@ class ManageDoctor extends Component {
                 inputData.map((item, index) => {
                     let object = {};
                     let labelVi = item.valueVI;
-                    let labelEn = item.valueEn;
-                    object.label = language === LANGUAGES.VI ? labelVi : labelEn;
+                    object.label = labelVi
                     object.value = item.keyMap;
                     result.push(object)
                 })
@@ -294,8 +332,9 @@ class ManageDoctor extends Component {
     };
 
     render() {
-        console.log('check laex state', this.state)
-        let { listSpecialty } = this.state;
+        // console.log('check laex state', this.state)
+
+        let { allRequiredDoctorInfor } = this.props
         return (
             <div className='manage-doctor-container'>
 
@@ -440,22 +479,21 @@ class ManageDoctor extends Component {
 
 }
 
-// const mapStateToProps = state => {
-//     return {
-//         language: state.app.language,
+const mapStateToProps = state => {
+    return {
 
-//         allDoctor: state.admin.allDoctor,
-//         allRequiredDoctorInfor: state.admin.allRequiredDoctorInfor
-//     };
-// };
 
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         fetchAllDoctor: () => dispatch(actions.fetchAllDoctor()),
-//         saveInforDoctor: (data) => dispatch(actions.saveInforDoctor(data)),
-//         getRequiredDoctorInfor: () => dispatch(actions.getRequiredDoctorInfor()),
+        allRequiredDoctorInfor: state.doctor.allRequiredDoctorInfor
+    };
+};
 
-//     };
-// };
+const mapDispatchToProps = dispatch => {
+    return {
+        handleFetchRequiredDoctor: () => dispatch(handleFetchRequiredDoctor()),
+        // saveInforDoctor: (data) => dispatch(actions.saveInforDoctor(data)),
+        // getRequiredDoctorInfor: () => dispatch(actions.getRequiredDoctorInfor()),
 
-export default ManageDoctor;
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageDoctor);

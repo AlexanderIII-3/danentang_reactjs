@@ -104,7 +104,17 @@ const handleUpdateSpecialtyService = (data) => {
 }
 
 //doctor
-const getDetailInforDoctor = (data) => {
+
+const fetchAllDoctor = () => {
+    return axios.get('/api/v1/getAllDoctors')
+
+}
+const getDetailInforDoctor = (id) => {
+    return axios.get(`api/v1/get-details-doctor?id=${id}`)
+}
+const saveInforDoctor = (data) => {
+
+    return axios.post('/api/v1/save-infor-doctor', data)
 
 }
 export {
@@ -116,5 +126,8 @@ export {
     handleFetchAllClinic, handleDeleteClinicService,
     handleUpdateClinicService, handleCreateSpecialtyService,
     handleFetchALlSpecialtyService, handleDeleteSpecialty,
-    handleUpdateSpecialtyService, getDetailInforDoctor
+    handleUpdateSpecialtyService, getDetailInforDoctor,
+
+
+    fetchAllDoctor, saveInforDoctor
 }
