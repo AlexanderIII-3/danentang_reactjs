@@ -409,7 +409,7 @@ class ManageDoctor extends Component {
 
 
                     <div className='col-4 form-group'>
-                        <label>Choose clinic</label>
+                        <label>Name clinic</label>
                         <input
                             onChange={(event) => this.handleChangeText(event, 'nameClinic')}
                             value={this.state.nameClinic}
@@ -439,7 +439,7 @@ class ManageDoctor extends Component {
 
                 <div className='row'>
                     <div className='col-4 form-group'>
-                        <label>Chọn Chuyên Khoa</label>
+                        <label>Choose specialty</label>
                         <Select
                             value={this.state.selectedSpecialty}
                             onChange={this.handleChangeSlectDoctorInfor}
@@ -449,7 +449,7 @@ class ManageDoctor extends Component {
                         />
                     </div>
                     <div className='col-4 form-group'>
-                        <label>Chọn Phòng Khám</label>
+                        <label>choose clinic</label>
                         <Select
                             value={this.state.selectedClinic}
                             onChange={this.handleChangeSlectDoctorInfor}
