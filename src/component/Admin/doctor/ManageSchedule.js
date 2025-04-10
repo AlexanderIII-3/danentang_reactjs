@@ -6,7 +6,8 @@ import { LANGUAGES } from '../../../utils/const';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
-// import { bulkCreateSchedule } from '../../../services/userService';
+import { fetchAllDoctorStart, fetchAllScheduleTime } from '../../../redux/action/userAction'
+import { bulkCreateSchedule } from '../../../services/userService';
 import _ from 'lodash'
 
 class ManageSchedule extends Component {
@@ -20,8 +21,9 @@ class ManageSchedule extends Component {
         }
     }
     componentDidMount() {
-        // this.props.fetchAllDoctor();
-        // this.props.fetchAllScheduleTime();
+        this.props.fetchAllDoctorStart();
+
+        this.props.fetchAllScheduleTime();
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
         let dataSelect = this.buildDataInputSelect(this.props.allDoctor)
@@ -98,6 +100,7 @@ class ManageSchedule extends Component {
 
 
         let formatDate = new Date(currentDate).getTime();
+        console.log('check date fomart', formatDate)
         if (rangeTime && rangeTime.length > 0) {
             let slectedTime = rangeTime.filter(item => item.isSelected === true)
             if (slectedTime && slectedTime.length > 0) {
@@ -114,17 +117,17 @@ class ManageSchedule extends Component {
                 return;
             }
         }
-        // let res = await bulkCreateSchedule({
-        //     arrSchedule: result,
-        //     doctorId: selectedDoctor.value,
-        //     date: formatDate
+        let res = await bulkCreateSchedule({
+            arrSchedule: result,
+            doctorId: selectedDoctor.value,
+            date: formatDate
 
-        // })
-        // console.log('check ress : ', res)
-        // if (res && res.errorCode === 0) {
-        //     toast.success("Create New Schedule Success!")
+        })
+        console.log('check ress : ', res)
+        if (res && res.errorCode === 0) {
+            toast.success("Create New Schedule Success!")
 
-        // }
+        }
     };
     render() {
         let { rangeTime } = this.state
@@ -188,16 +191,16 @@ const mapStateToProps = state => {
 
 
 
-        // allDoctor: state.admin.allDoctor,
-        // dataTime: state.admin.dataTime
+        allDoctor: state.doctor.doctorArr,
+        dataTime: state.doctor.timeArr
 
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        // fetchAllDoctor: () => dispatch(fetchAllDoctor()),
-        // fetchAllScheduleTime: () => dispatch(fetchAllScheduleTime()),
+        fetchAllDoctorStart: () => dispatch(fetchAllDoctorStart()),
+        fetchAllScheduleTime: () => dispatch(fetchAllScheduleTime()),
 
     };
 };

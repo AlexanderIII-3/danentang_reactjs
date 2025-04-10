@@ -117,6 +117,11 @@ const saveInforDoctor = (data) => {
     return axios.post('/api/v1/save-infor-doctor', data)
 
 }
+const bulkCreateSchedule = (data) => {
+
+    return axios.post('/api/bulk-create-schedule', data)
+
+}
 export {
     postCreateNewUser, getAllUsers,
     putUpdateUser, deleteUser,
@@ -129,5 +134,5 @@ export {
     handleUpdateSpecialtyService, getDetailInforDoctor,
 
 
-    fetchAllDoctor, saveInforDoctor
+    fetchAllDoctor, saveInforDoctor, bulkCreateSchedule
 }

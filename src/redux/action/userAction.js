@@ -1,11 +1,12 @@
 import { type } from '@testing-library/user-event/dist/type';
-import { FetchAllDoctor, FetchAllCodes, handleFetchAllClinic, handleFetchALlSpecialtyService } from '../../services/userService'
+import { FetchAllDoctor, fetchAllDoctor, FetchAllCodes, handleFetchAllClinic, handleFetchALlSpecialtyService } from '../../services/userService'
 
 export const HANDLE_LOGIN_COMPLETE = 'HANDLE_LOGIN_COMPLETE';
 export const HANDLE_LOGOUT_COMPLETE = 'HANDLE_LOGOUT_COMPLETE'
 export const HANDLE_FETCH_ALL_DOCTOR = 'HANDLE_FETCH_ALL_DOCTOR';
 export const HANDLE_FETCH_ALL_DOCTOR_FALL = 'HANDLE_FETCH_ALL_DOCTOR_FALL';
-export const HANDLE_FETCH_REQUIRED_DOCTOR = 'HANDLE_FETCH_REQUIRED_DOCTOR'
+export const HANDLE_FETCH_REQUIRED_DOCTOR = 'HANDLE_FETCH_REQUIRED_DOCTOR';
+export const FETCH_ALL_ALLCODE_SCHEDULE_TIME_SUCCESS = 'FETCH_ALL_ALLCODE_SCHEDULE_TIME_SUCCESS'
 export const handleLoginRedux = (data) => {
     return {
         type: HANDLE_LOGIN_COMPLETE,
@@ -60,6 +61,43 @@ export const fetchRequiredDoctorInforSuccess = (data) => {
     return {
         type: HANDLE_FETCH_REQUIRED_DOCTOR,
         payload: data
+    }
+
+}
+
+export const fetchAllDoctorStart = () => {
+
+
+    return async (dispatch, getState) => {
+
+        const resDoctor = await fetchAllDoctor();
+
+        if (resDoctor && resDoctor.EC === 0) {
+
+            let data = resDoctor.DT
+
+            dispatch({
+                payload: data,
+                type: HANDLE_FETCH_ALL_DOCTOR
+            })
+        }
+    }
+}
+export const fetchAllScheduleTime = () => {
+    return async (dispatch, getState) => {
+
+        try {
+            let res = await FetchAllCodes('TIME')
+            if (res && res.EC === 0) {
+                dispatch({
+                    payload: res.DT,
+                    type: FETCH_ALL_ALLCODE_SCHEDULE_TIME_SUCCESS
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
 }
