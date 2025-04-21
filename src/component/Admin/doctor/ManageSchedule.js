@@ -48,6 +48,12 @@ class ManageSchedule extends Component {
             })
         }
     }
+    handleChangeDatePicker = (date) => {
+        this.setState({
+            currentDate: date
+        })
+        console.log('check datte picker', date)
+    }
     buildDataInputSelect = (inputData) => {
         let result = [];
         if (inputData && inputData.length > 0) {
@@ -66,12 +72,7 @@ class ManageSchedule extends Component {
         this.setState({ selectedDoctor });
 
     };
-    handleChangeDetePicker = (date) => {
-        this.setState({
-            currentDate: date
-        })
-        console.log('check datte picker', date)
-    }
+
     handleClickButtonTime = (time) => {
         let { rangeTime } = this.state
         if (rangeTime && rangeTime.length > 0) {
@@ -123,8 +124,7 @@ class ManageSchedule extends Component {
             date: formatDate
 
         })
-        console.log('check ress : ', res)
-        if (res && res.errorCode === 0) {
+        if (res && res.EC === 0) {
             toast.success("Create New Schedule Success!")
 
         }
@@ -152,7 +152,7 @@ class ManageSchedule extends Component {
                             <label> Choose Day </label>
                             <DatePicker
                                 selected={this.state.currentDate}
-                                onChange={(date) => { this.handleChangeDetePicker(date) }}
+                                onChange={(date) => { this.handleChangeDatePicker(date) }}
                                 dateFormat={'dd/MM/yyyy'}
                                 minDate={yesterday}
                                 isClearable

@@ -122,6 +122,15 @@ const bulkCreateSchedule = (data) => {
     return axios.post('/api/bulk-create-schedule', data)
 
 }
+
+const getAllPatientForDoctor = (data) => {
+    return axios.get(`/api/v1/get-list-patient-for-doctor?doctorId=${data.doctorId}&date=${data.date}`)
+}
+
+const postVerifyBookingAppointment = (data) => {
+    return axios.post(`/api/v1/verify-booking-appointment`, data)
+}
+
 export {
     postCreateNewUser, getAllUsers,
     putUpdateUser, deleteUser,
@@ -134,5 +143,6 @@ export {
     handleUpdateSpecialtyService, getDetailInforDoctor,
 
 
-    fetchAllDoctor, saveInforDoctor, bulkCreateSchedule
+    fetchAllDoctor, saveInforDoctor, bulkCreateSchedule,
+    getAllPatientForDoctor, postVerifyBookingAppointment
 }

@@ -5,6 +5,7 @@ import {
 } from '../action/userAction';
 const INITIAL_STATE = {
     account: {
+        id: '',
         email: '',
         firstName: '',
         lastName: '',
@@ -19,6 +20,7 @@ const handleLoginReducer = (state = INITIAL_STATE, action) => {
             let data = action.payload.DT
             return {
                 ...state, account: {
+                    id: data.id,
                     email: data.email,
                     firstName: data.firstName,
                     lastName: data.lastName,

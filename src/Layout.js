@@ -16,6 +16,8 @@ import ManageDoctor from './component/Admin/Content/ManageDoctor';
 import ManageClinic from './component/Admin/clinic/ManageClinic';
 import ManageSpecilaty from './component/Admin/specialty/ManageSpecilaty';
 import ManageSchedule from './component/Admin/doctor/ManageSchedule';
+import ManagePatient from './component/Admin/doctor/ManagePatient';
+import VerifyEmail from './component/Admin/patient/VerifyEmail';
 const Layout = () => {
 
     return (
@@ -38,9 +40,14 @@ const Layout = () => {
                         <Route path='manage-clinic' element={<ManageClinic />}> </Route>
                         <Route path='manage-specilaty' element={<ManageSpecilaty />}> </Route>
                         <Route path='manage-schedule' element={<ManageSchedule />}> </Route>
+                        <Route path='manage-patient' element={<ManagePatient />}> </Route>
 
                     </Route>
                     <Route path="/login" element={<Login />} >
+
+                    </Route>
+
+                    <Route path='/verifly-booking' element={<VerifyEmail />} >
 
                     </Route>
                     <Route path="/register" element={<Register />} >
