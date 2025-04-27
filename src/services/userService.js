@@ -130,7 +130,9 @@ const getAllPatientForDoctor = (data) => {
 const postVerifyBookingAppointment = (data) => {
     return axios.post(`/api/v1/verify-booking-appointment`, data)
 }
-
+const sendRemedy = (data) => {
+    return axios.post(`/api/v1/sending-remedy`, data)
+}
 export {
     postCreateNewUser, getAllUsers,
     putUpdateUser, deleteUser,
@@ -144,5 +146,5 @@ export {
 
 
     fetchAllDoctor, saveInforDoctor, bulkCreateSchedule,
-    getAllPatientForDoctor, postVerifyBookingAppointment
+    getAllPatientForDoctor, postVerifyBookingAppointment, sendRemedy
 }

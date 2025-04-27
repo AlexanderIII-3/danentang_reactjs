@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { postVerifyBookingAppointment } from "../../../services/userService";
-// import HomeHeader from '../HomePage/HomeHeader';
 import './VerifyEmail.scss';
 
 const VerifyEmail = () => {
@@ -40,13 +39,13 @@ const VerifyEmail = () => {
             {/* <HomeHeader /> */}
             <div className='verify-email-container'>
                 {!statusVerify ? (
-                    <div className='verify-loading'>Loading....</div>
+                    <div className='verify-loading'>Trong quá trình tải....</div>
                 ) : (
                     <div>
                         {errorCode === 0 ? (
-                            <div className='infor-booking'>Confirm Appointment Success!</div>
+                            <div className='infor-booking'>Xác nhận lịch hẹn thành công !</div>
                         ) : (
-                            <div className='infor-booking'>Appointment is not existing!</div>
+                            <div className='infor-booking'>Lịch hẹn không tồn tại!</div>
                         )}
                     </div>
                 )}

@@ -6,14 +6,15 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getAllPatientForDoctor } from '../../../services/userService';
 import moment from 'moment';
-// import RemedyModel from './RemedyModel';
+import RemedyModel from './RemedyModel';
 import { toast } from 'react-toastify';
 import LoadingOverlay from 'react-loading-overlay';
+import { sendRemedy } from '../../../services/userService';
 class ManagePatient extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentDate: '',
+            currentDate: new Date().setHours(0, 0, 0, 0),
             dataPatient: [],
             // remedy
             isOpenRemedyModel: false,
@@ -28,15 +29,15 @@ class ManagePatient extends Component {
 
     }
     async componentDidMount() {
-        let account = this.props.user
-
         this.getDataPatient();
 
     }
 
     handleChangeDatePicker = (date) => {
+        date.setHours(0, 0, 0, 0);
+
         this.setState({
-            currentDate: date
+            currentDate: date.getTime()
 
         }, async () => {
 
@@ -48,19 +49,19 @@ class ManagePatient extends Component {
         let { account } = this.props.user;
 
         let { currentDate } = this.state;
-        let formatedDate = new Date(currentDate).getTime();
+        // let formatedDate = new Date(currentDate).getTime();
         let res = await getAllPatientForDoctor({
             doctorId: account.id,
-            date: formatedDate
+            date: currentDate
         });
         if (res && res.EC === 0) {
+            console.log('check data res', res.DT)
             this.setState({
                 dataPatient: res.DT
             })
         }
     }
     handleConfirmBooking = (item) => {
-        console.log('check iem name', item)
         let data = {
 
             doctorId: item.doctorId,
@@ -69,7 +70,10 @@ class ManagePatient extends Component {
             email: item.patientData.email,
             timeType: item.timeType,
             patientName: item.patientData.firstName,
+            reason: item.reason,
+            date: item.date
         }
+        console.log('check data', data)
         this.setState({
             isOpenRemedyModel: true,
             dataModal: data
@@ -83,32 +87,34 @@ class ManagePatient extends Component {
 
         })
     };
-    // sendRemedy = async (data) => {
-    //     this.setState({
-    //         isShowLoading: true,
-    //     })
-    //     let { dataModal } = this.state
-    //     let res = await sendRemedy({
-    //         email: data.email,
-    //         image: data.imageBase64,
-    //         doctorId: dataModal.doctorId,
-    //         patientId: dataModal.patientId,
-    //         timeType: dataModal.timeType,
-    //         patientName: dataModal.patientName
+    sendRemedy = async (data) => {
+        this.setState({
+            isShowLoading: true,
+        })
+        let { dataModal } = this.state
+        let res = await sendRemedy({
+            email: data.email,
+            image: data.imageBase64,
+            doctorId: dataModal.doctorId,
+            patientId: dataModal.patientId,
+            timeType: dataModal.timeType,
+            patientName: dataModal.patientName,
+            reason: dataModal.reason,
+            date: dataModal.date,
 
-    //     })
-    //     if (res && res.errorCode === 0) {
-    //         this.setState({
-    //             isShowLoading: false,
-    //         })
-    //         toast.success("Send Remedy Success!")
-    //         await this.getDataPatient();
-    //         this.closeRemedyModal();
+        })
+        if (res && res.EC === 0) {
+            this.setState({
+                isShowLoading: false,
+            })
+            toast.success("Send Remedy Success!")
+            await this.getDataPatient();
+            this.closeRemedyModal();
 
-    //     } else {
-    //         toast.error("Send Remedy Error!")
-    //     }
-    // };
+        } else {
+            toast.error("Send Remedy Error!")
+        }
+    };
     handleRemedy = () => {
 
     };
@@ -145,6 +151,7 @@ class ManagePatient extends Component {
                                         <th>Họ Và Tên</th>
                                         <th>Địa Chỉ</th>
                                         <th>Giới Tính</th>
+                                        <th>Triệu Chứng</th>
                                         <th>Action</th>
                                     </tr>
                                     {dataPatient && dataPatient.length > 0 ?
@@ -161,6 +168,7 @@ class ManagePatient extends Component {
                                                     <td>{item.patientData.firstName}</td>
                                                     <td>{item.patientData.address}</td>
                                                     <td>{gender}</td>
+                                                    <td>{item.reason}</td>
                                                     <td>
 
                                                         <button className='mp-btn-confirm'
@@ -189,12 +197,12 @@ class ManagePatient extends Component {
                         </div>
                     </div>
                 </div>
-                {/* <RemedyModel
-                        dataModal={dataModal}
-                        isOpen={isOpenRemedyModel}
-                        closeRemedyModal={this.closeRemedyModal}
-                        sendRemedy={this.sendRemedy}
-                    /> */}
+                <RemedyModel
+                    dataModal={dataModal}
+                    isOpen={isOpenRemedyModel}
+                    closeRemedyModal={this.closeRemedyModal}
+                    sendRemedy={this.sendRemedy}
+                />
 
 
 
