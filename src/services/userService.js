@@ -131,7 +131,12 @@ const postVerifyBookingAppointment = (data) => {
     return axios.post(`/api/v1/verify-booking-appointment`, data)
 }
 const sendRemedy = (data) => {
-    return axios.post(`/api/v1/sending-remedy`, data)
+    return axios.post(`/api/v1/genaral-pdf`, data)
+}
+const handleGetHistoryPatient = (email) => {
+
+    return axios.get(`/api/v1/get-history-patient?email=${email}`)
+
 }
 export {
     postCreateNewUser, getAllUsers,
@@ -146,5 +151,6 @@ export {
 
 
     fetchAllDoctor, saveInforDoctor, bulkCreateSchedule,
-    getAllPatientForDoctor, postVerifyBookingAppointment, sendRemedy
+    getAllPatientForDoctor, postVerifyBookingAppointment, sendRemedy,
+    handleGetHistoryPatient
 }

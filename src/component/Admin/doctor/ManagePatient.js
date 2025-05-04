@@ -6,10 +6,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getAllPatientForDoctor } from '../../../services/userService';
 import moment from 'moment';
-import RemedyModel from './RemedyModel';
+import ResultModal from './ResultModal';
 import { toast } from 'react-toastify';
 import LoadingOverlay from 'react-loading-overlay';
 import { sendRemedy } from '../../../services/userService';
+import { result } from 'lodash';
 class ManagePatient extends Component {
     constructor(props) {
         super(props);
@@ -62,47 +63,55 @@ class ManagePatient extends Component {
         }
     }
     handleConfirmBooking = (item) => {
+        let patientname = item.patientData.firstName + item.patientData.lastName
+
         let data = {
 
             doctorId: item.doctorId,
             patientId: item.patienId,
 
-            email: item.patientData.email,
+            email: item?.patientData?.email,
             timeType: item.timeType,
-            patientName: item.patientData.firstName,
+            patientName: patientname,
             reason: item.reason,
             date: item.date
         }
-        console.log('check data', data)
         this.setState({
             isOpenRemedyModel: true,
-            dataModal: data
+            dataModal: data,
         })
 
     };
     closeRemedyModal = () => {
         this.setState({
             isOpenRemedyModel: false,
-            dataModal: {}
+
 
         })
     };
     sendRemedy = async (data) => {
+        let { account } = this.props.user;
+        let doctorname = account.firstName + " " + account.lastName
+
         this.setState({
             isShowLoading: true,
         })
         let { dataModal } = this.state
+
         let res = await sendRemedy({
-            email: data.email,
-            image: data.imageBase64,
+            email: dataModal.email,
             doctorId: dataModal.doctorId,
+            doctorname: doctorname,
             patientId: dataModal.patientId,
             timeType: dataModal.timeType,
             patientName: dataModal.patientName,
             reason: dataModal.reason,
             date: dataModal.date,
-
+            result: data.result,
+            prescription: data.prescription,
+            note: data.note,
         })
+
         if (res && res.EC === 0) {
             this.setState({
                 isShowLoading: false,
@@ -119,7 +128,7 @@ class ManagePatient extends Component {
 
     };
     render() {
-        let yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
+        let tomoraw = new Date(new Date().setDate(new Date().getDate() + 1));
 
         let { dataPatient, dataModal, isOpenRemedyModel } = this.state;
 
@@ -138,7 +147,7 @@ class ManagePatient extends Component {
                                 selected={this.state.currentDate}
                                 onChange={(date) => { this.handleChangeDatePicker(date) }}
                                 dateFormat={'dd/MM/yyyy'}
-                                minDate={yesterday}
+                                maxDate={tomoraw}
                                 isClearable
                             />
                         </div>
@@ -159,7 +168,7 @@ class ManagePatient extends Component {
                                         dataPatient.map((item, index) => {
                                             let gender = item?.patientData?.genderData ? item?.patientData?.genderData?.valueVi : ''
                                             let time = item?.timeBookingData ? item?.timeBookingData?.valueVi : ''
-
+                                            console.log('check data item', dataPatient)
 
                                             return (
                                                 <tr key={index}>
@@ -196,16 +205,16 @@ class ManagePatient extends Component {
                             </table>
                         </div>
                     </div>
+
+
+
                 </div>
-                <RemedyModel
-                    dataModal={dataModal}
+
+                <ResultModal
                     isOpen={isOpenRemedyModel}
                     closeRemedyModal={this.closeRemedyModal}
                     sendRemedy={this.sendRemedy}
                 />
-
-
-
 
             </>
         );

@@ -74,8 +74,8 @@ const SideBar = (props) => {
                             <MenuItem> <Link to="manage-clinic" >Manage CLinic</Link></MenuItem>
                             <MenuItem> <Link to="manage-specilaty" >Manage Specialty</Link></MenuItem>
                             <MenuItem> <Link to="manage-schedule" >Manage Schedule</Link> </MenuItem>
-                            <MenuItem> <Link to="manage-schedule" >Manage Schedule</Link> </MenuItem>
                             <MenuItem> <Link to="manage-patient" >Manage Patient</Link> </MenuItem>
+                            <MenuItem> <Link to="manage-history" >Manage history Patient</Link> </MenuItem>
                         </SubMenu>
 
                     </Menu>

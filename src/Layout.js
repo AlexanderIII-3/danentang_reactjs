@@ -18,6 +18,7 @@ import ManageSpecilaty from './component/Admin/specialty/ManageSpecilaty';
 import ManageSchedule from './component/Admin/doctor/ManageSchedule';
 import ManagePatient from './component/Admin/doctor/ManagePatient';
 import VerifyEmail from './component/Admin/patient/VerifyEmail';
+import PatientHistory from './component/Admin/doctor/PatientHistory';
 const Layout = () => {
 
     return (
@@ -41,6 +42,7 @@ const Layout = () => {
                         <Route path='manage-specilaty' element={<ManageSpecilaty />}> </Route>
                         <Route path='manage-schedule' element={<ManageSchedule />}> </Route>
                         <Route path='manage-patient' element={<ManagePatient />}> </Route>
+                        <Route path='manage-history' element={<PatientHistory />}> </Route>
 
                     </Route>
                     <Route path="/login" element={<Login />} >
