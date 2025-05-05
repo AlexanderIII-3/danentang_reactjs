@@ -96,11 +96,11 @@ class ResultModal extends Component {
 
 
                         <Form.Group controlId="formPrescription" className="mb-3">
-                            <Form.Label>Đơn thuốc</Form.Label>
+                            <Form.Label>Lưu ý:</Form.Label>
                             <Form.Control
                                 as="textarea"
                                 rows={3}
-                                placeholder="Nhập đơn thuốc..."
+                                placeholder="Nhập lưu ý..."
                                 value={this.state.note}
                                 onChange={(e) => this.handleOnChangeInput(e, 'note')}
                             />

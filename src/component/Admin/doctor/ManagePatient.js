@@ -9,8 +9,9 @@ import moment from 'moment';
 import ResultModal from './ResultModal';
 import { toast } from 'react-toastify';
 import LoadingOverlay from 'react-loading-overlay';
-import { sendRemedy } from '../../../services/userService';
+import { sendRemedy, handleSaveInforPatient } from '../../../services/userService';
 import { result } from 'lodash';
+import PatientInfoModal from './PatientInfoModal';
 class ManagePatient extends Component {
     constructor(props) {
         super(props);
@@ -19,10 +20,13 @@ class ManagePatient extends Component {
             dataPatient: [],
             // remedy
             isOpenRemedyModel: false,
+            isOpenPatientInfoModel: false,
             dataModal: {},
             emailPatient: '',
             image: '',
-            isShowLoading: false
+            isShowLoading: false,
+            patientDone: false,
+            dataPatientModal: {},
         };
     }
     async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -124,9 +128,31 @@ class ManagePatient extends Component {
             toast.error("Send Remedy Error!")
         }
     };
-    handleRemedy = () => {
-
+    handleRemedy = (item) => {
+        this.setState({
+            isOpenPatientInfoModel: true,
+            dataPatientModal: item,
+        })
     };
+    handleClosePatientInfoModal = () => {
+        this.setState({
+            isOpenPatientInfoModel: false,
+        })
+    }
+    handleSavePatientInfo = async (data) => {
+        let res = await handleSaveInforPatient(data)
+
+        if (res && res.EC === 0) {
+            toast.success(res.EM)
+            this.setState({
+                isOpenPatientInfoModel: false,
+                patientDone: true,
+            })
+            await this.getDataPatient();
+        } else {
+            toast.error(res.EM)
+        }
+    }
     render() {
         let tomoraw = new Date(new Date().setDate(new Date().getDate() + 1));
 
@@ -179,13 +205,16 @@ class ManagePatient extends Component {
                                                     <td>{gender}</td>
                                                     <td>{item.reason}</td>
                                                     <td>
+                                                        {this.state.patientDone === false ? <button
+                                                            onClick={() => this.handleRemedy(item)}
+                                                            className='mp-btn-remedy'>Nhập thông tin</button> :
 
-                                                        <button className='mp-btn-confirm'
-                                                            onClick={() => this.handleConfirmBooking(item)}
-                                                        >Xác Nhận</button>
-                                                        <button
-                                                            onCanPlay={() => this.handleRemedy()}
-                                                            className='mp-btn-remedy'>Gửi Hoá Đơn</button>
+                                                            <button className='mp-btn-confirm'
+                                                                onClick={() => this.handleConfirmBooking(item)}
+                                                            >Xác Nhận</button>
+                                                        }
+
+
                                                     </td>
                                                 </tr>
                                             )
@@ -210,12 +239,21 @@ class ManagePatient extends Component {
 
                 </div>
 
+
+                <PatientInfoModal
+
+                    show={this.state.isOpenPatientInfoModel}
+                    onClose={this.handleClosePatientInfoModal}
+                    handleSave={this.handleSavePatientInfo}
+                    dataPatientModal={this.state.dataPatientModal}
+                >
+
+                </PatientInfoModal>
                 <ResultModal
                     isOpen={isOpenRemedyModel}
                     closeRemedyModal={this.closeRemedyModal}
                     sendRemedy={this.sendRemedy}
                 />
-
             </>
         );
     }

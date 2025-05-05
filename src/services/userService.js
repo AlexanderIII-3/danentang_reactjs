@@ -138,6 +138,13 @@ const handleGetHistoryPatient = (email) => {
     return axios.get(`/api/v1/get-history-patient?email=${email}`)
 
 }
+const handleSaveInforPatient = (data) => {
+
+    return axios.post(`/api/save-infor-patient`, data)
+
+}
+
+
 export {
     postCreateNewUser, getAllUsers,
     putUpdateUser, deleteUser,
@@ -152,5 +159,5 @@ export {
 
     fetchAllDoctor, saveInforDoctor, bulkCreateSchedule,
     getAllPatientForDoctor, postVerifyBookingAppointment, sendRemedy,
-    handleGetHistoryPatient
+    handleGetHistoryPatient, handleSaveInforPatient
 }
