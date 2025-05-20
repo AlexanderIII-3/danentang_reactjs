@@ -123,6 +123,11 @@ const bulkCreateSchedule = (data) => {
 
 }
 
+const handleCancelSchedule = (data) => {
+
+    return axios.post('/api/v1/handle-cancel-schedule', data)
+}
+
 const getAllPatientForDoctor = (data) => {
     return axios.get(`/api/v1/get-list-patient-for-doctor?doctorId=${data.doctorId}&date=${data.date}`)
 }
@@ -145,6 +150,7 @@ const handleSaveInforPatient = (data) => {
 }
 
 
+
 export {
     postCreateNewUser, getAllUsers,
     putUpdateUser, deleteUser,
@@ -155,6 +161,7 @@ export {
     handleUpdateClinicService, handleCreateSpecialtyService,
     handleFetchALlSpecialtyService, handleDeleteSpecialty,
     handleUpdateSpecialtyService, getDetailInforDoctor,
+    handleCancelSchedule,
 
 
     fetchAllDoctor, saveInforDoctor, bulkCreateSchedule,

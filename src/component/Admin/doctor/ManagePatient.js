@@ -9,9 +9,10 @@ import moment from 'moment';
 import ResultModal from './ResultModal';
 import { toast } from 'react-toastify';
 import LoadingOverlay from 'react-loading-overlay';
-import { sendRemedy, handleSaveInforPatient } from '../../../services/userService';
+import { sendRemedy, handleSaveInforPatient, handleCancelSchedule } from '../../../services/userService';
 import { result } from 'lodash';
 import PatientInfoModal from './PatientInfoModal';
+import CancelAppointmentConfirmModal from './CancelAppointmentConfirmModal';
 class ManagePatient extends Component {
     constructor(props) {
         super(props);
@@ -27,6 +28,9 @@ class ManagePatient extends Component {
             isShowLoading: false,
             patientDone: false,
             dataPatientModal: {},
+
+            isOpenCancel: false,
+            dataCancel: {}
         };
     }
     async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -36,6 +40,11 @@ class ManagePatient extends Component {
     async componentDidMount() {
         this.getDataPatient();
 
+    }
+    closeCancelModal = () => {
+        this.setState({
+            isOpenCancel: false
+        })
     }
 
     handleChangeDatePicker = (date) => {
@@ -60,7 +69,6 @@ class ManagePatient extends Component {
             date: currentDate
         });
         if (res && res.EC === 0) {
-            console.log('check data res', res.DT)
             this.setState({
                 dataPatient: res.DT
             })
@@ -134,6 +142,32 @@ class ManagePatient extends Component {
             dataPatientModal: item,
         })
     };
+    handleCancelSchudule = (item) => {
+        this.setState({
+            isOpenCancel: true,
+            dataCancel: item
+        })
+    }
+    confirmCancel = async (data) => {
+        this.setState({
+            isOpenCancel: false
+        })
+
+        let dataCancel = {
+            doctorId: data.doctorId,
+            date: data.date,
+            patienId: data.patienId,
+            timeType: data.timeType
+        };
+        let res = await handleCancelSchedule(dataCancel)
+        if (res && res.EC === 0) {
+
+            toast.success(res.EM)
+            this.getDataPatient();
+        } else {
+            toast.error(res.EM)
+        }
+    }
     handleClosePatientInfoModal = () => {
         this.setState({
             isOpenPatientInfoModel: false,
@@ -205,13 +239,26 @@ class ManagePatient extends Component {
                                                     <td>{gender}</td>
                                                     <td>{item.reason}</td>
                                                     <td>
-                                                        {this.state.patientDone === false ? <button
-                                                            onClick={() => this.handleRemedy(item)}
-                                                            className='mp-btn-remedy'>Nhập thông tin</button> :
+                                                        {
 
-                                                            <button className='mp-btn-confirm'
-                                                                onClick={() => this.handleConfirmBooking(item)}
-                                                            >Xác Nhận</button>
+                                                            this.state.patientDone === false ? <> <button
+                                                                onClick={() => this.handleRemedy(item)}
+                                                                className='mp-btn-remedy'>Nhập thông tin</button>
+                                                                <button className='mp-btn-cancel'
+                                                                    onClick={() => this.handleCancelSchudule(item)}
+                                                                >
+                                                                    Huỷ lịch
+
+                                                                </button>
+                                                            </>
+
+                                                                :
+
+                                                                <button className='mp-btn-confirm'
+                                                                    onClick={() => this.handleConfirmBooking(item)}
+                                                                >Xác Nhận</button>
+
+
                                                         }
 
 
@@ -224,7 +271,7 @@ class ManagePatient extends Component {
                                         :
                                         <tr>
 
-                                            <td colSpan={'6'} style={{ textAlign: 'center', color: 'red' }}> No schedule data!</td>
+                                            <td colSpan={'7'} style={{ textAlign: 'center', color: 'red' }}> Hiện tại chưa có lịch hẹn!</td>
                                         </tr>
                                     }
 
@@ -249,6 +296,12 @@ class ManagePatient extends Component {
                 >
 
                 </PatientInfoModal>
+                <CancelAppointmentConfirmModal
+                    show={this.state.isOpenCancel}
+                    onClose={this.closeCancelModal}
+                    onConfirm={this.confirmCancel}
+                    dataCancel={this.state.dataCancel}
+                />
                 <ResultModal
                     isOpen={isOpenRemedyModel}
                     closeRemedyModal={this.closeRemedyModal}
