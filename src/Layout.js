@@ -19,6 +19,7 @@ import ManageSchedule from './component/Admin/doctor/ManageSchedule';
 import ManagePatient from './component/Admin/doctor/ManagePatient';
 import VerifyEmail from './component/Admin/patient/VerifyEmail';
 import PatientHistory from './component/Admin/doctor/PatientHistory';
+import ReExamSchedule from './component/Admin/doctor/ReExamSchedule';
 const Layout = () => {
 
     return (
@@ -43,6 +44,7 @@ const Layout = () => {
                         <Route path='manage-schedule' element={<ManageSchedule />}> </Route>
                         <Route path='manage-patient' element={<ManagePatient />}> </Route>
                         <Route path='manage-history' element={<PatientHistory />}> </Route>
+                        <Route path='manage-rexam' element={<ReExamSchedule />}> </Route>
 
                     </Route>
                     <Route path="/login" element={<Login />} >

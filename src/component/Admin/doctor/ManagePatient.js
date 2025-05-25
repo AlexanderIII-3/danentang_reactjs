@@ -9,10 +9,11 @@ import moment from 'moment';
 import ResultModal from './ResultModal';
 import { toast } from 'react-toastify';
 import LoadingOverlay from 'react-loading-overlay';
-import { sendRemedy, handleSaveInforPatient, handleCancelSchedule } from '../../../services/userService';
+import { sendRemedyApi, handleSaveInforPatient, handleCancelSchedule, handleSaveFollowUp } from '../../../services/userService';
 import { result } from 'lodash';
 import PatientInfoModal from './PatientInfoModal';
 import CancelAppointmentConfirmModal from './CancelAppointmentConfirmModal';
+import FollowUpModal from './FollowUpModal';
 class ManagePatient extends Component {
     constructor(props) {
         super(props);
@@ -30,7 +31,10 @@ class ManagePatient extends Component {
             dataPatientModal: {},
 
             isOpenCancel: false,
-            dataCancel: {}
+            dataCancel: {},
+
+            isOpenFollowUpModal: false,
+            dataFollowUp: {}
         };
     }
     async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -41,6 +45,30 @@ class ManagePatient extends Component {
         this.getDataPatient();
 
     }
+    openFollowUpModal = (item) => {
+        this.setState({
+            isOpenFollowUpModal: true,
+            dataFollowUp: item
+        });
+    };
+
+    closeFollowUpModal = () => {
+        this.setState({
+            isOpenFollowUpModal: false
+        });
+    };
+
+    handleSaveFollowUp = async (data) => {
+
+        let res = await handleSaveFollowUp(data);
+        if (res && res.EC === 0) {
+            toast.success(res.EM);
+            this.setState({ isOpenFollowUpModal: false });
+        } else {
+            toast.error(res.EM || 'Lỗi khi hẹn lịch!');
+        }
+    };
+
     closeCancelModal = () => {
         this.setState({
             isOpenCancel: false
@@ -75,8 +103,9 @@ class ManagePatient extends Component {
         }
     }
     handleConfirmBooking = (item) => {
-        let patientname = item.patientData.firstName + item.patientData.lastName
 
+        let patientname = item.patientData.firstName + item.patientData.lastName
+        let nameClinic = item.doctorInforData.nameClinic
         let data = {
 
             doctorId: item.doctorId,
@@ -86,7 +115,9 @@ class ManagePatient extends Component {
             timeType: item.timeType,
             patientName: patientname,
             reason: item.reason,
-            date: item.date
+            date: item.date,
+            token: item.token,
+            nameClinic: nameClinic,
         }
         this.setState({
             isOpenRemedyModel: true,
@@ -110,7 +141,7 @@ class ManagePatient extends Component {
         })
         let { dataModal } = this.state
 
-        let res = await sendRemedy({
+        let res = await sendRemedyApi({
             email: dataModal.email,
             doctorId: dataModal.doctorId,
             doctorname: doctorname,
@@ -119,9 +150,11 @@ class ManagePatient extends Component {
             patientName: dataModal.patientName,
             reason: dataModal.reason,
             date: dataModal.date,
+            nameClinic: dataModal.nameClinic,
             result: data.result,
             prescription: data.prescription,
             note: data.note,
+            token: dataModal.token,
         })
 
         if (res && res.EC === 0) {
@@ -228,7 +261,6 @@ class ManagePatient extends Component {
                                         dataPatient.map((item, index) => {
                                             let gender = item?.patientData?.genderData ? item?.patientData?.genderData?.valueVi : ''
                                             let time = item?.timeBookingData ? item?.timeBookingData?.valueVi : ''
-                                            console.log('check data item', dataPatient)
 
                                             return (
                                                 <tr key={index}>
@@ -239,7 +271,7 @@ class ManagePatient extends Component {
                                                     <td>{gender}</td>
                                                     <td>{item.reason}</td>
                                                     <td>
-                                                        {
+                                                        {/* {
 
                                                             this.state.patientDone === false ? <> <button
                                                                 onClick={() => this.handleRemedy(item)}
@@ -252,14 +284,18 @@ class ManagePatient extends Component {
                                                                 </button>
                                                             </>
 
-                                                                :
+                                                                : */}
+                                                        <>
+                                                            <button className='mp-btn-confirm'
+                                                                onClick={() => this.handleConfirmBooking(item)}
+                                                            >Xác Nhận</button>
+                                                            <button className='mp-btn-follow-up'
+                                                                onClick={() => this.openFollowUpModal(item)}
+                                                            >Hẹn tái khám</button>
+                                                        </>
 
-                                                                <button className='mp-btn-confirm'
-                                                                    onClick={() => this.handleConfirmBooking(item)}
-                                                                >Xác Nhận</button>
 
-
-                                                        }
+                                                        {/* } */}
 
 
                                                     </td>
@@ -306,6 +342,13 @@ class ManagePatient extends Component {
                     isOpen={isOpenRemedyModel}
                     closeRemedyModal={this.closeRemedyModal}
                     sendRemedy={this.sendRemedy}
+                />
+
+                <FollowUpModal
+                    show={this.state.isOpenFollowUpModal}
+                    onClose={this.closeFollowUpModal}
+                    onSave={this.handleSaveFollowUp}
+                    dataPatient={this.state.dataFollowUp}
                 />
             </>
         );

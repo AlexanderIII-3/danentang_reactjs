@@ -195,7 +195,7 @@ const ManageClinic = () => {
                 </div>
                 <div className='manage-specialty-editor col-12'>
                     <MdEditor
-                        style={{ height: '300px' }}
+                        style={{ height: '400px' }}
                         renderHTML={text => mdParser.render(text)}
                         onChange={handleEditorChange}
                         value={state.descriptionMarkDown}

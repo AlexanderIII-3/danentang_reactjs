@@ -33,7 +33,6 @@ class ResultModal extends Component {
     }
 
     handleSave = () => {
-
         let { result, prescription, note } = this.state;
         let { dataModal, sendRemedy } = this.props;
         if (!result || !prescription) {
@@ -46,6 +45,7 @@ class ResultModal extends Component {
             prescription: prescription,
             note: note
         }
+
         sendRemedy(data);
         this.handleCloseModal();
     }

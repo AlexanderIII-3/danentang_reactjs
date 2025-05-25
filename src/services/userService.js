@@ -135,7 +135,7 @@ const getAllPatientForDoctor = (data) => {
 const postVerifyBookingAppointment = (data) => {
     return axios.post(`/api/v1/verify-booking-appointment`, data)
 }
-const sendRemedy = (data) => {
+const sendRemedyApi = (data) => {
     return axios.post(`/api/v1/genaral-pdf`, data)
 }
 const handleGetHistoryPatient = (email) => {
@@ -148,7 +148,20 @@ const handleSaveInforPatient = (data) => {
     return axios.post(`/api/save-infor-patient`, data)
 
 }
+const handleSaveFollowUp = (data) => {
 
+    return axios.post('/api/v1/save-follow-up', data)
+}
+const handleGetPendingReExams = (id) => {
+    return axios.get(`/api/v1/fetch-all-rexam?doctorId=${id}`)
+
+}
+const handleUpdateFollowUp = (token) => {
+    return axios.put('/api/v1/update-follow-up', { token: token })
+}
+const handleCreateNextReExam = (data) => {
+    return axios.post('/api/v1/handle-create-reexam', data)
+}
 
 
 export {
@@ -161,10 +174,11 @@ export {
     handleUpdateClinicService, handleCreateSpecialtyService,
     handleFetchALlSpecialtyService, handleDeleteSpecialty,
     handleUpdateSpecialtyService, getDetailInforDoctor,
-    handleCancelSchedule,
+    handleCancelSchedule, handleSaveFollowUp,
+    handleGetPendingReExams, handleCreateNextReExam,
 
 
     fetchAllDoctor, saveInforDoctor, bulkCreateSchedule,
-    getAllPatientForDoctor, postVerifyBookingAppointment, sendRemedy,
-    handleGetHistoryPatient, handleSaveInforPatient
+    getAllPatientForDoctor, postVerifyBookingAppointment, sendRemedyApi,
+    handleGetHistoryPatient, handleSaveInforPatient, handleUpdateFollowUp
 }

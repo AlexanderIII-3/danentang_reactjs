@@ -8,7 +8,7 @@ import _ from 'lodash';
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import { CommonUtils } from '../../../utils/CommonUtils';
-
+import './ModalUpdateSpecialty.scss';
 const ModalUpdateSpecialty = (props) => {
 
     const mdParser = new MarkdownIt();
@@ -111,11 +111,13 @@ const ModalUpdateSpecialty = (props) => {
         <>
 
 
-            <Modal show={showModalUpdateSpecialty}
+            <Modal
+                show={showModalUpdateSpecialty}
                 onHide={handleClose}
                 size='xl'
                 backdrop='static'
                 className='modal-add-user'
+                dialogClassName="custom-modal-size"
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Update Specialty</Modal.Title>

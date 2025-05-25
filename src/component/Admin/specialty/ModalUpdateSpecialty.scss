@@ -1,0 +1,9 @@
+.custom-modal-size {
+    max-width: 1000px;
+    /* hoặc 90% */
+}
+
+.custom-modal-size .modal-content {
+    min-height: 80vh;
+    /* tùy chỉnh chiều cao */
+}
