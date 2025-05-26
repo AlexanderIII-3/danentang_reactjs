@@ -21,14 +21,9 @@ const postCreateNewUser = (email, password,
 const getAllUsers = () => {
     return axios.get('api/v1/user/all')
 }
-const putUpdateUser = (id, userName, role, image) => {
-    const data = new FormData();
-    data.append('id', id);
+const putUpdateUser = (data) => {
 
-
-    data.append('username', userName);
-    data.append('role', role);
-    data.append('userImage', image);
+    console.log('data update user: ', data);
     return axios.put('api/v1/participant', data)
 };
 const deleteUser = (id) => {

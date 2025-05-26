@@ -28,7 +28,7 @@ const TableUser = (props) => {
                                 <tr key={index}>
                                     <td >{index + 1}</td>
                                     <td>{item.email}</td>
-                                    <td>{item.firstName + " " + item.lastName}</td>
+                                    <td>{item.lastName + " " + item.firstName}</td>
                                     <td>{item.roleId}</td>
                                     <td>{item.address}</td>
                                     <td>{item.phoneNumber}</td>

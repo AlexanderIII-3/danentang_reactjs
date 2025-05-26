@@ -61,6 +61,8 @@ const ManageUser = (props) => {
     };
     //CRUD USER
     const handleClickBtnUpdateUser = (user) => {
+
+        console.log('check user', user)
         setDataUpdateUser(user)
         setShowModalUpdateUser(true);
     };
@@ -143,7 +145,7 @@ const ManageUser = (props) => {
                 <ModalUpdateUser
                     setShowModalUpdateUser={setShowModalUpdateUser}
                     getAllUser={getAllUser}
-
+                    listRole={listRole}
                     showModalUpdateUser={showModalUpdateUser}
                     dataUpdateUser={dataUpdateUser}
 
