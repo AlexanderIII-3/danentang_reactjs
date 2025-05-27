@@ -5,6 +5,7 @@ import { FcAddImage } from "react-icons/fc";
 import { toast } from 'react-toastify';
 import { putUpdateUser } from '../../../services/userService'
 import _ from 'lodash';
+import { CommonUtils } from '../../../utils/CommonUtils';
 
 const bufferToBase64 = (buffer) => {
     if (!buffer || !buffer.data) return '';
@@ -23,7 +24,6 @@ const ModalUpdateUser = (props) => {
     const handleClose = () => {
         setShowModalUpdateUser(false);
         setEmail('');
-        setUserName('');
         setFirstName('');
         setLastName('');
         setPhoneNumber('');
@@ -36,40 +36,39 @@ const ModalUpdateUser = (props) => {
     //state
     const [id, setId] = useState('')
     const [email, setEmail] = useState('');
-    const [userName, setUserName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [address, setAddress] = useState('');
     const [image, setImage] = useState('');
-    const [role, setRole] = useState(listRole[0]?.keyMap ? listRole[0]?.keyMap : '');
+    const [role, setRole] = useState('');
     const [previewImage, setPreviewImage] = useState('');
-
     useEffect(() => {
         if (!_.isEmpty(dataUpdateUser)) {
-            let data = dataUpdateUser.image;
-            if (data) {
-                let image = bufferToBase64(data);
-                setPreviewImage(image);
-            } else {
-                setPreviewImage('');
-            }
+            setPreviewImage(dataUpdateUser.image);
             setId(dataUpdateUser.id);
             setEmail(dataUpdateUser.email);
-            setUserName(dataUpdateUser.username);
             setFirstName(dataUpdateUser.firstName || '');
             setLastName(dataUpdateUser.lastName || '');
             setPhoneNumber(dataUpdateUser.phoneNumber || '');
             setAddress(dataUpdateUser.address || '');
-            setImage('');
-            setRole(dataUpdateUser.role);
+            setImage(dataUpdateUser.image || '');
+            setRole(dataUpdateUser.roleId || '');
         }
     }, [dataUpdateUser]);
 
-    const handleUploadImage = (event) => {
+    const handleUploadImage = async (event) => {
         if (event?.target?.files && event?.target?.files[0]) {
-            setPreviewImage(URL.createObjectURL(event.target.files[0]));
-            setImage(event.target.files[0]);
+            let file = event.target.files[0];
+            if (file) {
+                let base64 = await CommonUtils.getBase64(file);
+                let objectUrl = URL.createObjectURL(file);
+                setPreviewImage(objectUrl);
+                setImage(base64);
+
+            }
+
+
         }
     };
 
@@ -85,7 +84,8 @@ const ModalUpdateUser = (props) => {
             firstName,
             lastName,
             phoneNumber,
-            address
+            address,
+            image
         }
         let data = await putUpdateUser(dataInput);
 
@@ -99,6 +99,20 @@ const ModalUpdateUser = (props) => {
         }
     };
 
+
+
+    //  const handleOnchangeImage = async (event) => {
+    //         let file = event.target.files[0];
+    //         if (file) {
+    //             let base64 = await CommonUtils.getBase64(file);
+    //             let objectUrl = URL.createObjectURL(file);
+    //             setState(prevState => ({
+    //                 ...prevState,
+    //                 previewImgUrl: objectUrl,
+    //                 image: base64,
+    //             }));
+    //         }
+    //     };
     return (
         <>
             <Modal

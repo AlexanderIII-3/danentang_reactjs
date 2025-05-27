@@ -8,7 +8,6 @@ import { getAllPatientForDoctor } from '../../../services/userService';
 import moment from 'moment';
 import ResultModal from './ResultModal';
 import { toast } from 'react-toastify';
-import LoadingOverlay from 'react-loading-overlay';
 import { sendRemedyApi, handleSaveInforPatient, handleCancelSchedule, handleSaveFollowUp } from '../../../services/userService';
 import { result } from 'lodash';
 import PatientInfoModal from './PatientInfoModal';
@@ -182,9 +181,6 @@ class ManagePatient extends Component {
         })
     }
     confirmCancel = async (data) => {
-        this.setState({
-            isOpenCancel: false
-        })
 
         let dataCancel = {
             doctorId: data.doctorId,
@@ -200,6 +196,9 @@ class ManagePatient extends Component {
         } else {
             toast.error(res.EM)
         }
+        this.setState({
+            isOpenCancel: false
+        })
     }
     handleClosePatientInfoModal = () => {
         this.setState({

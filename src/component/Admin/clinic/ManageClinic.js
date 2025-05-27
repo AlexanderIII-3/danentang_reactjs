@@ -157,7 +157,7 @@ const ManageClinic = () => {
                 </div>
 
                 <div className='col-6 form-group'>
-                    <label>Image Specialty</label>
+                    <label>Image Clinic</label>
                     <div className='preview-img-container'>
                         <input
                             onChange={handleOnchangeImage}

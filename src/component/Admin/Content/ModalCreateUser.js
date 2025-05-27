@@ -5,6 +5,7 @@ import { FcAddImage } from "react-icons/fc";
 import { toast } from 'react-toastify';
 import { postCreateNewUser } from '../../../services/userService'
 import { useEffect, usePrevious } from 'react';
+import { CommonUtils } from '../../../utils/CommonUtils';
 const ModalCreateUser = (props) => {
 
     const {
@@ -46,24 +47,36 @@ const ModalCreateUser = (props) => {
 
 
 
-            setPreviewImage(URL.createObjectURL(event.target.files[0]));
+            // setPreviewImage(URL.createObjectURL(event.target.files[0]));
 
-            let getBase64 = (file) => {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = error => reject(error);
-                });
+            // let getBase64 = (file) => {
+            //     return new Promise((resolve, reject) => {
+            //         const reader = new FileReader();
+            //         reader.readAsDataURL(file);
+            //         reader.onload = () => resolve(reader.result);
+            //         reader.onerror = error => reject(error);
+            //     });
+            // }
+
+
+
+            // let data = event.target.files;
+            // let file = data[0];
+            // let base64 = await getBase64(file);
+
+            // setImage(base64)
+
+
+            let file = event.target.files[0];
+            if (file) {
+                let base64 = await CommonUtils.getBase64(file);
+                let objectUrl = URL.createObjectURL(file);
+
+                setPreviewImage(objectUrl);
+                setImage(base64);
+
             }
 
-
-
-            let data = event.target.files;
-            let file = data[0];
-            let base64 = await getBase64(file);
-
-            setImage(base64)
 
         }
     };

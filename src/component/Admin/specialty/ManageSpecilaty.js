@@ -135,7 +135,7 @@ const ManageSpecity = () => {
             </div>
             <div className='add-new-specialty row'>
                 <div className='col-6 form-group'>
-                    <label>Name Clinic </label>
+                    <label>Name Specialty </label>
                     <input
                         value={name}
                         onChange={(event) => handleOnchange(event, setName)}
@@ -152,7 +152,7 @@ const ManageSpecity = () => {
                         />
                         <label className='label-upload' htmlFor='previewImg'>
                             <FcAddImage size={35} />
-                            Tải Ảnh <i className='fas fa-upload'></i>
+                            Upload File <i className='fas fa-upload'></i>
                         </label>
                         {/* <div className='preview-image'
                             style={{ backgroundImage: `url(${previewImgUrl})` }}
