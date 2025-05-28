@@ -14,9 +14,20 @@ import sidebarBg from '../../assets/bg2.jpg';
 import { GiAncientRuins } from "react-icons/gi";
 import { GiAngelOutfit } from "react-icons/gi";
 import { Link, NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 const SideBar = (props) => {
     const { image, collapsed, toggled, handleToggleSidebar } = props;
+
+
+    const accountRedux = useSelector(state => state.userInfo.account);
+    const [account, setAccount] = useState(accountRedux);
+
+    useEffect(() => {
+
+        setAccount(accountRedux);
+    }, [])
     return (
         <>
             <ProSidebar
@@ -69,14 +80,23 @@ const SideBar = (props) => {
                             icon={<FaRegLaughWink />}
                             title="Features"
                         >
-                            <MenuItem>  <Link to="manage-user">Manage User</Link></MenuItem>
-                            <MenuItem> <Link to="manage-doctor">Manage Doctor</Link> </MenuItem>
-                            <MenuItem> <Link to="manage-clinic" >Manage CLinic</Link></MenuItem>
-                            <MenuItem> <Link to="manage-specilaty" >Manage Specialty</Link></MenuItem>
-                            <MenuItem> <Link to="manage-schedule" >Manage Schedule</Link> </MenuItem>
-                            <MenuItem> <Link to="manage-patient" >Manage Patient</Link> </MenuItem>
-                            <MenuItem> <Link to="manage-history" >Manage history Patient</Link> </MenuItem>
-                            <MenuItem> <Link to="manage-rexam" >Manage Rexam </Link> </MenuItem>
+
+                            {account.roleId === 'R1' && (
+                                <>
+                                    <MenuItem>  <Link to="manage-user">Manage User</Link></MenuItem>
+                                    <MenuItem> <Link to="manage-doctor">Manage Doctor</Link> </MenuItem>
+                                    <MenuItem> <Link to="manage-clinic" >Manage CLinic</Link></MenuItem>
+                                    <MenuItem> <Link to="manage-specilaty" >Manage Specialty</Link></MenuItem>
+                                    <MenuItem> <Link to="manage-schedule" >Manage Schedule</Link> </MenuItem>
+                                </>
+                            )}
+                            {account.roleId === 'R2' && (
+                                <>
+                                    <MenuItem> <Link to="manage-patient" >Manage Patient</Link> </MenuItem>
+                                    <MenuItem> <Link to="manage-history" >Manage history Patient</Link> </MenuItem>
+                                    <MenuItem> <Link to="manage-rexam" >Manage Rexam </Link> </MenuItem>
+                                </>
+                            )}
                         </SubMenu>
 
                     </Menu>

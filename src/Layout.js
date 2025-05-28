@@ -20,6 +20,7 @@ import ManagePatient from './component/Admin/doctor/ManagePatient';
 import VerifyEmail from './component/Admin/patient/VerifyEmail';
 import PatientHistory from './component/Admin/doctor/PatientHistory';
 import ReExamSchedule from './component/Admin/doctor/ReExamSchedule';
+
 const Layout = () => {
 
     return (

@@ -6,7 +6,6 @@ const UpdateReExamModal = ({ isOpen, closeModal, updateReExam, data }) => {
     console.log("UpdateReExamModal data:", data);
     const [nextDate, setNextDate] = useState("");
     const [nextReason, setNextReason] = useState("");
-    const [examResult, setExamResult] = useState("");
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -14,7 +13,6 @@ const UpdateReExamModal = ({ isOpen, closeModal, updateReExam, data }) => {
         if (data) {
             setNextDate(data.nextDate ? format(new Date(Number(data.nextDate)), 'yyyy-MM-dd') : "");
             setNextReason(data.reason || "");
-            setExamResult(data.result || "");
         }
     }, [data, isOpen]);
 
@@ -29,7 +27,6 @@ const UpdateReExamModal = ({ isOpen, closeModal, updateReExam, data }) => {
         if (!nextDate) newErrors.nextDate = "Vui lòng chọn ngày tái khám";
         else if (new Date(nextDate) < new Date()) newErrors.nextDate = "Ngày tái khám phải trong tương lai";
         if (!nextReason) newErrors.nextReason = "Vui lòng nhập lý do tái khám";
-        if (!examResult) newErrors.examResult = "Vui lòng nhập kết quả khám";
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -44,7 +41,6 @@ const UpdateReExamModal = ({ isOpen, closeModal, updateReExam, data }) => {
                 patientEmail: data.patientEmail,
                 nextDate,
                 reason: nextReason,
-                examResult,
             });
         } finally {
             setIsSubmitting(false);
@@ -123,24 +119,7 @@ const UpdateReExamModal = ({ isOpen, closeModal, updateReExam, data }) => {
                                 </p>
                             )}
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Kết quả khám hiện tại <span className="text-red-500">*</span>
-                            </label>
-                            <textarea
-                                value={examResult}
-                                onChange={(e) => setExamResult(e.target.value)}
-                                rows={3}
-                                className={`block w-full px-3 py-2 border ${errors.examResult ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
-                                placeholder="Nhập kết quả khám hiện tại"
-                            />
-                            {errors.examResult && (
-                                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                                    <span className="material-icons text-base">error_outline</span>
-                                    {errors.examResult}
-                                </p>
-                            )}
-                        </div>
+
                     </div>
                 </div>
             </Modal.Body>
