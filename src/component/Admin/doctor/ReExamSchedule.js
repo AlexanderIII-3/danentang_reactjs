@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { handleCreateNextReExam, handleGetPendingReExams, handleUpdateFollowUp } from "../../../services/userService";
+import { handleCreateNextReExam, handleDeletReExam, handleUpdateReExamService, handleGetPendingReExams, handleUpdateFollowUp, } from "../../../services/userService";
 import { useSelector } from "react-redux";
 import ResultModal from "./ResultModal";
 import { toast } from "react-toastify";
@@ -7,6 +7,7 @@ import { sendRemedyApi } from "../../../services/userService";
 import { set } from "nprogress";
 import CreateReExamModal from "./CreateReExamModal";
 import { result } from "lodash";
+import UpdateReExamModal from "./UpdateReExamModal";
 
 // import {
 //     handleGetPendingReExams,
@@ -19,18 +20,25 @@ const ReExamManagement = () => {
     const [loading, setLoading] = useState(false);
     const [isOpenCreateReExam, setIsOpenCreateReExam] = useState(false);
     const [dataModalReExam, setDataModalReExam] = useState({});
+    const [dataModalUpdateReExam, setDataModalUpdateReExam] = useState({});
     const [dataModal, setDataModal] = useState({});
     const [isOpenRemedyModel, setIsOpenRemedyModel] = useState(false);
-    // Form tạo lịch tái khám tiếp theo
-    const [nextDate, setNextDate] = useState("");
-    const [nextReason, setNextReason] = useState("");
-    const [patientEmailForNext, setPatientEmailForNext] = useState("");
+    const [isOpenUpdateReExam, setIsOpenUpdateReExam] = useState(false);
     const account = useSelector(state => state.userInfo.account)
+    const [dateNow, setDateNow] = useState(() => {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        return now.getTime();
+    });
+    const [isDate, setIsDate] = useState(false);
+    // Đặt thời gian về 0h00
+
     const fetchPending = async () => {
         setLoading(true);
         try {
             const res = await handleGetPendingReExams(account.id);
             setPendingReExams(res.DT || []);
+
         } catch (error) {
             alert("Không tải được danh sách tái khám");
             console.error(error);
@@ -67,7 +75,13 @@ const ReExamManagement = () => {
 
 
     };
-
+    const handleCompareDate = (dateNow, dateBooking) => {
+        const date1 = new Date(dateNow);
+        const date2 = new Date(+dateBooking);
+        date1.setHours(0, 0, 0, 0);
+        date2.setHours(0, 0, 0, 0);
+        return date1.getTime() === date2.getTime();
+    };
     // handle submit final result
 
 
@@ -139,39 +153,62 @@ const ReExamManagement = () => {
         }
         setLoading(false);
     };
+
+    const updateReExam = async (data) => {
+        const dateString = data.nextDate;
+        const timestamp = new Date(dateString).getTime();
+
+        let dataReExam = {
+            id: dataModalUpdateReExam.id,
+            date: timestamp,
+            reason: data.reason,
+            result: data.examResult,
+
+        }
+        setLoading(true);
+        const res = await handleUpdateReExamService(dataReExam);
+        console.log("check res", res)
+        if (res && res.EC === 0) {
+            toast.success(res.EM);
+            await fetchPending();
+            setIsOpenCreateReExam(false);
+        } else {
+            toast.error(res.EM);
+        }
+        setLoading(false);
+    }
     const handleCreateReExam = (data) => {
-        console.log("check data", data)
         setDataModalReExam(data);
         setIsOpenCreateReExam(true);
     }
+    const handleUpdateReExam = (data) => {
+        console.log("check data", data)
+        setDataModalUpdateReExam(data);
+        setIsOpenUpdateReExam(true);
 
-    const createNextReExam = async () => {
-        if (!patientEmailForNext || !nextDate || !nextReason) {
-            alert("Nhập đầy đủ thông tin tạo lịch tái khám tiếp theo");
-            return;
-        }
+    }
+    const handleDeleteReExam = async (item) => {
+        setLoading(true);
         try {
-
-            const res = await handleCreateNextReExam({
-                patientEmail: patientEmailForNext,
-                nextDate,
-                reason: nextReason,
-            });
-            if (res.EC === 0) {
-                alert("Tạo lịch tái khám tiếp theo thành công");
-                setNextDate("");
-                setNextReason("");
-                setPatientEmailForNext("");
-                fetchPending();
+            const data = {
+                token: item.token,
+                date: item.date
+            }
+            const res = await handleDeletReExam(data);
+            if (res && res.EC === 0) {
+                toast.success("Xoá lịch tái khám thành công");
+                await fetchPending();
             } else {
-                alert("Tạo lịch tái khám thất bại");
+                toast.error(res.EM);
             }
         } catch (error) {
-            alert("Lỗi khi tạo lịch tái khám");
+            toast.error("Xoá lịch tái khám thất bại");
             console.error(error);
+        } finally {
+            setLoading(false);
         }
-    };
 
+    }
     useEffect(() => {
         fetchPending();
     }, []);
@@ -208,26 +245,39 @@ const ReExamManagement = () => {
                                     <td className="border px-3 py-2">{convertTimestampToDateString(item.date)}</td>
                                     <td className="border px-3 py-2">{item.reason}</td>
                                     <td className="border px-3 py-2"> {item.result} </td>
+                                    {handleCompareDate(dateNow, item.date) ?
+                                        <td className="border px-3 py-2 space-x-2">
+                                            <button
+                                                onClick={() => handleConfirmBooking(item)}
+                                                className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                                            >
+                                                Nhập kết quả
+                                            </button>
+                                            <button
+                                                onClick={() => handleCreateReExam(item)}
+                                                className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                                            >
+                                                Tạo lịch tái khám mới
+                                            </button>
+                                        </td>
+                                        :
+                                        <td className="border px-3 py-2 text-gray-400 text-center">
+                                            <button
+                                                onClick={() => handleDeleteReExam(item)}
+                                                className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                                            >
+                                                Xoá
+                                            </button>
+                                            <button
+                                                onClick={() => handleUpdateReExam(item)}
+                                                className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                                            >
+                                                Sửa
+                                            </button>
+                                        </td>
+                                    }
 
-                                    <td className="border px-3 py-2 space-x-2">
 
-                                        <button
-                                            onClick={() => {
-                                                handleConfirmBooking(item);
-                                            }}
-                                            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                                        >
-                                            Nhập kết quả
-                                        </button>
-
-                                        <button
-                                            onClick={() => handleCreateReExam(item)}
-                                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                                        >
-                                            Tạo lịch tái khám mới
-                                        </button>
-
-                                    </td>
                                 </tr>
                             ))}
 
@@ -236,35 +286,7 @@ const ReExamManagement = () => {
 
                     <hr className="my-6" />
 
-                    <h3 className="text-xl font-semibold mb-4">Tạo lịch tái khám tiếp theo</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-lg">
-                        <input
-                            type="email"
-                            placeholder="Email bệnh nhân"
-                            value={patientEmailForNext}
-                            onChange={(e) => setPatientEmailForNext(e.target.value)}
-                            className="border px-3 py-2 rounded"
-                        />
-                        <input
-                            type="date"
-                            value={nextDate}
-                            onChange={(e) => setNextDate(e.target.value)}
-                            className="border px-3 py-2 rounded"
-                        />
-                        <input
-                            type="text"
-                            placeholder="Lý do tái khám"
-                            value={nextReason}
-                            onChange={(e) => setNextReason(e.target.value)}
-                            className="border px-3 py-2 rounded"
-                        />
-                        <button
-                            onClick={() => setIsOpenCreateReExam(true)}
-                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                        >
-                            Tạo lịch tái khám mới
-                        </button>
-                    </div>
+
                 </>
             )}
             <ResultModal
@@ -277,6 +299,12 @@ const ReExamManagement = () => {
                 closeModal={() => setIsOpenCreateReExam(false)}
                 createReExam={createReExam}
                 data={dataModalReExam}
+            />
+            <UpdateReExamModal
+                isOpen={isOpenUpdateReExam}
+                closeModal={() => setIsOpenUpdateReExam(false)}
+                updateReExam={updateReExam}
+                data={dataModalUpdateReExam}
             />
         </div>
     );

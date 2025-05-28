@@ -157,6 +157,15 @@ const handleUpdateFollowUp = (token) => {
 const handleCreateNextReExam = (data) => {
     return axios.post('/api/v1/handle-create-reexam', data)
 }
+const handleDeletReExam = (data) => {
+    return axios.delete('/api/v1/delete-reexam', { data })
+
+};
+const handleUpdateReExamService = (data) => {
+
+    return axios.put('/api/v1/update-reexam', data)
+}
+
 
 
 export {
@@ -175,5 +184,6 @@ export {
 
     fetchAllDoctor, saveInforDoctor, bulkCreateSchedule,
     getAllPatientForDoctor, postVerifyBookingAppointment, sendRemedyApi,
-    handleGetHistoryPatient, handleSaveInforPatient, handleUpdateFollowUp
+    handleGetHistoryPatient, handleSaveInforPatient, handleUpdateFollowUp,
+    handleDeletReExam, handleUpdateReExamService
 }

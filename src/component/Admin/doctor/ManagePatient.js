@@ -102,7 +102,7 @@ class ManagePatient extends Component {
         }
     }
     handleConfirmBooking = (item) => {
-
+        console.log('item', item)
         let patientname = item.patientData.firstName + item.patientData.lastName
         let nameClinic = item.doctorInforData.nameClinic
         let data = {

@@ -6,8 +6,6 @@ import "react-datepicker/dist/react-datepicker.css";
 const FollowUpModal = ({ show, onClose, onSave, dataPatient }) => {
     const [date, setDate] = useState(new Date());
     const [reason, setReason] = useState('');
-    const [result, setResult] = useState('');
-    console.log('check data iddedafa', dataPatient)
     const handleSave = () => {
         if (!date || !reason.trim()) {
             alert('Vui lòng nhập đầy đủ thông tin!');
@@ -21,7 +19,6 @@ const FollowUpModal = ({ show, onClose, onSave, dataPatient }) => {
             statusId: dataPatient.statusId,
             token: dataPatient.token,
             patientEmail: dataPatient?.patientData.email,
-            result
         });
     };
 
@@ -44,8 +41,7 @@ const FollowUpModal = ({ show, onClose, onSave, dataPatient }) => {
                 <label>Lý do tái khám:</label>
                 <textarea value={reason} onChange={(e) => setReason(e.target.value)} />
 
-                <label>Kết quả khám:</label>
-                <textarea value={result} onChange={(e) => setResult(e.target.value)} />
+
                 <div className='modal-actions'>
                     <button onClick={onClose}>Huỷ</button>
                     <button onClick={handleSave}>Lưu</button>

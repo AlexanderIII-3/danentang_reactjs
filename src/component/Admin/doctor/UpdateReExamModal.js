@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import { format } from 'date-fns';
 
-const CreateReExamModal = ({ isOpen, closeModal, createReExam, data }) => {
+const UpdateReExamModal = ({ isOpen, closeModal, updateReExam, data }) => {
+    console.log("UpdateReExamModal data:", data);
     const [nextDate, setNextDate] = useState("");
     const [nextReason, setNextReason] = useState("");
     const [examResult, setExamResult] = useState("");
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (data) {
+            setNextDate(data.nextDate ? format(new Date(Number(data.nextDate)), 'yyyy-MM-dd') : "");
+            setNextReason(data.reason || "");
+            setExamResult(data.result || "");
+        }
+    }, [data, isOpen]);
 
     const formatExamDate = (timestamp) => {
         if (!timestamp) return '';
@@ -17,30 +26,25 @@ const CreateReExamModal = ({ isOpen, closeModal, createReExam, data }) => {
 
     const validateForm = () => {
         const newErrors = {};
-
         if (!nextDate) newErrors.nextDate = "Vui lòng chọn ngày tái khám";
         else if (new Date(nextDate) < new Date()) newErrors.nextDate = "Ngày tái khám phải trong tương lai";
-
         if (!nextReason) newErrors.nextReason = "Vui lòng nhập lý do tái khám";
-
         if (!examResult) newErrors.examResult = "Vui lòng nhập kết quả khám";
-
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async () => {
         if (!validateForm()) return;
-
         setIsSubmitting(true);
         try {
-            await createReExam({
+            await updateReExam({
+                id: data.id, // id lịch tái khám cần update
                 patientId: data.patientId,
                 patientEmail: data.patientEmail,
-                nextDate: nextDate,
+                nextDate,
                 reason: nextReason,
-                examResult: examResult,
-                previousExamId: data.id
+                examResult,
             });
         } finally {
             setIsSubmitting(false);
@@ -48,6 +52,7 @@ const CreateReExamModal = ({ isOpen, closeModal, createReExam, data }) => {
     };
 
     const tomorrow = format(new Date(Date.now() + 24 * 60 * 60 * 1000), 'yyyy-MM-dd');
+
     return (
         <Modal
             show={isOpen}
@@ -55,17 +60,16 @@ const CreateReExamModal = ({ isOpen, closeModal, createReExam, data }) => {
             backdrop='static'
             centered
             size="xl"
-            aria-labelledby="create-reexam-modal"
+            aria-labelledby="update-reexam-modal"
         >
             <Modal.Header closeButton className="border-b-0 pb-0">
                 <Modal.Title className="text-xl font-bold text-gray-800">
-                    Đặt lịch tái khám
+                    Cập nhật lịch tái khám
                 </Modal.Title>
             </Modal.Header>
 
             <Modal.Body className="pt-0 animate-fadeIn">
                 <div className="space-y-4">
-                    {/* Patient Info */}
                     <div className="bg-blue-50 p-4 rounded-lg">
                         <h3 className="font-medium text-gray-800 mb-2">Thông tin bệnh nhân</h3>
                         <div className="grid grid-cols-2 gap-4">
@@ -79,10 +83,7 @@ const CreateReExamModal = ({ isOpen, closeModal, createReExam, data }) => {
                             </div>
                         </div>
                     </div>
-
-                    {/* Re-exam Form */}
                     <div className="space-y-4 mt-4">
-                        {/* Next date */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Ngày tái khám <span className="text-red-500">*</span>
@@ -99,13 +100,11 @@ const CreateReExamModal = ({ isOpen, closeModal, createReExam, data }) => {
                             )}
                             {errors.nextDate && (
                                 <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                                    <span className="material-icons text-base">error_outline</span>
+                                    <span className="material-icons text-base">error_outline: </span>
                                     {errors.nextDate}
                                 </p>
                             )}
                         </div>
-
-                        {/* Reason */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Lý do tái khám <span className="text-red-500">*</span>
@@ -124,8 +123,6 @@ const CreateReExamModal = ({ isOpen, closeModal, createReExam, data }) => {
                                 </p>
                             )}
                         </div>
-
-                        {/* Exam Result */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Kết quả khám hiện tại <span className="text-red-500">*</span>
@@ -160,11 +157,11 @@ const CreateReExamModal = ({ isOpen, closeModal, createReExam, data }) => {
                     disabled={isSubmitting}
                     className={`ml-3 px-4 py-2 text-sm font-medium text-white ${isSubmitting ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
                 >
-                    {isSubmitting ? 'Đang gửi...' : 'Xác nhận tái khám'}
+                    {isSubmitting ? 'Đang cập nhật...' : 'Cập nhật'}
                 </button>
             </Modal.Footer>
         </Modal>
     );
 };
 
-export default CreateReExamModal;
+export default UpdateReExamModal;
