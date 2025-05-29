@@ -1,3 +1,4 @@
+import { act } from "react";
 import axios from "../utils/axiosHost";
 const postCreateNewUser = (email, password,
     firstName, lastName,
@@ -165,6 +166,9 @@ const handleUpdateReExamService = (data) => {
 
     return axios.put('/api/v1/update-reexam', data)
 }
+const getBasicInfoByPatientId = (patientId, actor) => {
+    return axios.get(`/api/v1/get-basic-info-by-patient-id?patientId=${patientId}&actor=${actor}`)
+}
 
 
 
@@ -185,5 +189,5 @@ export {
     fetchAllDoctor, saveInforDoctor, bulkCreateSchedule,
     getAllPatientForDoctor, postVerifyBookingAppointment, sendRemedyApi,
     handleGetHistoryPatient, handleSaveInforPatient, handleUpdateFollowUp,
-    handleDeletReExam, handleUpdateReExamService
+    handleDeletReExam, handleUpdateReExamService, getBasicInfoByPatientId
 }

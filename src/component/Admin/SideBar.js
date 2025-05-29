@@ -81,15 +81,15 @@ const SideBar = (props) => {
                             title="Features"
                         >
 
-                            {account.roleId === 'R1' && (
-                                <>
-                                    <MenuItem>  <Link to="manage-user">Manage User</Link></MenuItem>
-                                    <MenuItem> <Link to="manage-doctor">Manage Doctor</Link> </MenuItem>
-                                    <MenuItem> <Link to="manage-clinic" >Manage CLinic</Link></MenuItem>
-                                    <MenuItem> <Link to="manage-specilaty" >Manage Specialty</Link></MenuItem>
-                                    <MenuItem> <Link to="manage-schedule" >Manage Schedule</Link> </MenuItem>
-                                </>
-                            )}
+                            {/* {account.roleId === 'R1' && ( */}
+                            <>
+                                <MenuItem>  <Link to="manage-user">Manage User</Link></MenuItem>
+                                <MenuItem> <Link to="manage-doctor">Manage Doctor</Link> </MenuItem>
+                                <MenuItem> <Link to="manage-clinic" >Manage CLinic</Link></MenuItem>
+                                <MenuItem> <Link to="manage-specilaty" >Manage Specialty</Link></MenuItem>
+                                <MenuItem> <Link to="manage-schedule" >Manage Schedule</Link> </MenuItem>
+                            </>
+                            {/* )} */}
                             {account.roleId === 'R2' && (
                                 <>
                                     <MenuItem> <Link to="manage-patient" >Manage Patient</Link> </MenuItem>
